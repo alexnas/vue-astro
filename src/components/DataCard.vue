@@ -4,7 +4,7 @@ defineProps({
     type: String,
     default: 'Card Name'
   },
-  initData: {
+  data: {
     type: Object || Array,
     default: () => {}
   }
@@ -16,7 +16,7 @@ defineProps({
     <div>
       <div class="text-xl font-medium text-black">{{ title }}</div>
       <div class="text-slate-500">
-        <pre>{{ initData }}</pre>
+        <pre>{{ data }}</pre>
       </div>
     </div>
   </div>

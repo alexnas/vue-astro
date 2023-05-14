@@ -68,11 +68,56 @@ function findLevel1() {
 }
 
 const { level1, level1Flat } = findLevel1()
+const { fullTree } = findTrees(level1)
+
+function swapObject(obj) {
+  const swaped = {}
+  Object.keys(obj).forEach((key) => {
+    if (!obj[key]) {
+      res[obj[key]] = [key]
+    }
+    if (swaped[obj[key]]) {
+      swaped[obj[key]] = swaped[obj[key]].concat([key])
+    } else {
+      swaped[obj[key]] = [key]
+    }
+  })
+  return swaped
+}
+
+function findTrees(level1Tree: any) {
+  let usedItems = [...level1Flat]
+
+  const level2: string[] = []
+  const itemsL2 = {}
+  initArr.value.forEach((item) => {
+    if (!usedItems.includes(item) && level1Flat.includes(initObj[item])) {
+      level2.push(item)
+      itemsL2[item] = initObj[item]
+    }
+  })
+  let swapedL2 = swapObject(itemsL2)
+
+  let tree = level1Tree.map((branch) =>
+    branch.map((item) => {
+      if (Object.keys(swapedL2).includes(item)) {
+        usedItems = [...usedItems, ...swapedL2[item]]
+        item = { [item]: swapedL2[item] }
+      }
+      return item
+    })
+  )
+  console.log('usedItems', usedItems)
+  // let used1_2 = [...level1Flat, ...level2]
+
+  console.log('newItems', itemsL2, swapedL2, level2, usedItems)
+  return { fullTree: tree }
+}
 </script>
 
 <template>
-  <h2 class="text-2xl font-medium text-teal-400 text-center">Result Data</h2>
   <div class="flex-col space-y-4">
+    <DataCard title="Full Tree" :initData="fullTree" />
     <DataCard title="Level1" :initData="level1" />
   </div>
 </template>

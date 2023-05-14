@@ -1,16 +1,28 @@
-import type { IPerson } from '@/types'
+import type { IPersonSet } from '@/types'
 
-const dummyData: IPerson = {
-  Sun: 'Moon',
-  Moon: 'Venus',
-  Mercury: 'Neptune',
-  Venus: 'Saturn',
-  Mars: 'Venus',
-  Jupiter: 'Earth',
-  Saturn: 'Mars',
-  Uranus: 'Uranus',
-  Neptune: 'Mercury',
-  Pluto: 'Sun'
+const dummyData1: IPersonSet = {
+  sun: 'moon',
+  moon: 'venus',
+  mercury: 'neptune',
+  venus: 'saturn',
+  mars: 'venus',
+  jupiter: 'earth',
+  saturn: 'mars',
+  uranus: 'uranus',
+  neptune: 'pluto',
+  pluto: 'neptune'
 }
 
-export { dummyData }
+const dummyData2: IPersonSet = {
+  sun: 'pluto',
+  moon: 'saturn',
+  mercury: 'pluto',
+  venus: 'pluto',
+  mars: 'earth',
+  jupiter: 'jupiter',
+  saturn: 'moon',
+  uranus: 'uranus',
+  neptune: 'uranus',
+  pluto: 'sun'
+}
+export { dummyData1, dummyData2 as dummyData }
