@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import DataCard from '@/components/DataCard.vue'
 import { useAstroDataStore } from '@/stores/astroData'
@@ -6,11 +7,18 @@ import { useAstroDataStore } from '@/stores/astroData'
 const astroDataStore = useAstroDataStore()
 const {
   initObj,
-  convertedResultDataObj,
+  baseLevel,
+  baseLevelFlatMono,
+  baseLevelFlatPoly,
+  idsAllArr,
   convertedInitDataArr,
   convertedInitDataObj,
-  getBaseLevel
+  convertedRes
 } = storeToRefs(astroDataStore)
+
+onMounted(() => {
+  astroDataStore.getBaseLevel()
+})
 </script>
 
 <template>
@@ -28,14 +36,14 @@ const {
       <div>
         <h2 class="text-2xl font-medium text-teal-400 text-center">Result Data</h2>
         <div class="flex-col space-y-4">
-          <DataCard title="BASE Level" :data="getBaseLevel.baseLevel" />
-          <DataCard title="BASE Level Flat MONO" :data="getBaseLevel.baseLevelFlatMono" />
-          <DataCard title="BASE Level Flat POLY" :data="getBaseLevel.baseLevelFlatPoly" />
-          <DataCard title=" All IDs Flat" :data="getBaseLevel.idsAllArr" />
+          <DataCard title="BASE Level" :data="baseLevel" />
+          <DataCard title="BASE Level Flat MONO" :data="baseLevelFlatMono" />
+          <DataCard title="BASE Level Flat POLY" :data="baseLevelFlatPoly" />
+          <DataCard title=" All IDs Flat" :data="idsAllArr" />
 
           <hr class="w-full h-1 py-3 bg-teal-200 border-0 rounded dark:bg-gray-700" />
 
-          <DataCard title="Result Astro Data" :data="convertedResultDataObj" />
+          <DataCard title="Result Astro Data" :data="convertedRes" />
         </div>
       </div>
     </div>

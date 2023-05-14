@@ -1,10 +1,25 @@
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { IConverted1, IConverted2, IPersonSet } from './../types'
 import { dummyData } from '@/data/basicData'
 
 export const useAstroDataStore = defineStore('astroData', () => {
-  const initObj = reactive<IPersonSet>({ ...dummyData })
+  const initObj = reactive<IPersonSet>({ ...dummyData }) // Initial data to compute
+  const baseLevel = reactive<string[][]>([]) // Base lavel ids all around
+  const baseLevelFlatMono = reactive<string[]>([]) // Base lavel ids in MONO groups
+  const baseLevelFlatPoly = ref<string[]>([]) // Base lavel ids in POLY groups
+  const idsAllArr = reactive<string[]>(Object.keys(initObj)) // All ids (keys) from initial object
+  const convertedRes = ref<IConverted2>({}) // Resulted object after all convertions
+
+  const convertedInitDataArr = computed(() => {
+    const arr = [] as IConverted1[]
+
+    Object.keys(initObj).forEach((planet) => {
+      const parent: string = initObj[planet]
+      arr.push({ id: planet, parent, level: -1, children: [] })
+    })
+    return arr
+  })
 
   const convertedInitDataObj = computed(() => {
     return getConvertedDataObj()
@@ -14,12 +29,17 @@ export const useAstroDataStore = defineStore('astroData', () => {
     return getConvertedDataObj()
   })
 
+  const getConvertedDataObj = () => {
+    const obj = {} as IConverted2
+    Object.keys(initObj).forEach((planet) => {
+      const parent: string = initObj[planet]
+      obj[planet] = { id: planet, parent, level: -1, children: [] }
+    })
+    return obj
+  }
+
   // ==========================================
-  const getBaseLevel = computed(() => {
-    const baseLevelFlatMono: string[] = [] // Base lavel ids in MONO groups
-    let baseLevelFlatPoly: string[] = [] // Base lavel ids in POLY groups
-    const baseLevel: string[][] = [] // Base lavel ids all around
-    const idsAllArr = Object.keys(initObj) // All ids (keys) from initial object
+  const getBaseLevel = () => {
     const checkedIdsSafe = [] // Ids already checked in the cycles
 
     // Get Earth and Vulcan
@@ -44,7 +64,7 @@ export const useAstroDataStore = defineStore('astroData', () => {
 
     // Get Poly planets in the base lavel
     idsAllArr.forEach((id) => {
-      if (baseLevelFlatMono.includes(id) || baseLevelFlatPoly.includes(id)) {
+      if (baseLevelFlatMono.includes(id) || baseLevelFlatPoly.value.includes(id)) {
         return
       }
 
@@ -60,7 +80,7 @@ export const useAstroDataStore = defineStore('astroData', () => {
         if (
           !initObj[currCycleId] ||
           baseLevelFlatMono.includes(initObj[currCycleId]) ||
-          baseLevelFlatPoly.includes(initObj[currCycleId])
+          baseLevelFlatPoly.value.includes(initObj[currCycleId])
         ) {
           break
         }
@@ -70,7 +90,7 @@ export const useAstroDataStore = defineStore('astroData', () => {
           const cycleFoundResult = cycleFoundArr.splice(cycleFoundArr.indexOf(startFoundCycle))
 
           baseLevel.push(cycleFoundResult)
-          baseLevelFlatPoly = [...baseLevelFlatPoly, ...cycleFoundResult]
+          baseLevelFlatPoly.value = [...baseLevelFlatPoly.value, ...cycleFoundResult]
           break
         }
 
@@ -78,38 +98,25 @@ export const useAstroDataStore = defineStore('astroData', () => {
       }
     })
 
-    baseLevelFlatPoly.forEach((id) => {
+    baseLevelFlatPoly.value.forEach((id) => {
       convertedResultDataObj.value[id]['level'] = 1
     })
 
+    convertedRes.value = convertedResultDataObj.value
+
     return { baseLevel, baseLevelFlatMono, baseLevelFlatPoly, idsAllArr }
-  })
-  // ==========================================
-
-  const convertedInitDataArr = computed(() => {
-    const arr = [] as IConverted1[]
-
-    Object.keys(initObj).forEach((planet) => {
-      const parent: string = initObj[planet]
-      arr.push({ id: planet, parent, level: -1, children: [] })
-    })
-    return arr
-  })
-
-  const getConvertedDataObj = () => {
-    const obj = {} as IConverted2
-    Object.keys(initObj).forEach((planet) => {
-      const parent: string = initObj[planet]
-      obj[planet] = { id: planet, parent, level: -1, children: [] }
-    })
-    return obj
   }
+  // ==========================================
 
   return {
     initObj,
+    baseLevel,
+    baseLevelFlatMono,
+    baseLevelFlatPoly,
+    idsAllArr,
     convertedInitDataArr,
     convertedInitDataObj,
-    convertedResultDataObj,
+    convertedRes,
     getBaseLevel
   }
 })
