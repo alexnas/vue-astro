@@ -25,4 +25,17 @@ const dummyData2: IPersonSet = {
   neptune: 'uranus',
   pluto: 'sun'
 }
-export { dummyData1, dummyData2 as dummyData }
+
+const dummyData3: IPersonSet = {
+  sun: 'sun',
+  moon: 'sun',
+  mercury: 'moon',
+  venus: 'mercury',
+  mars: 'venus',
+  jupiter: 'mars',
+  saturn: 'moon',
+  uranus: 'sun',
+  neptune: 'vulcan',
+  pluto: 'earth'
+}
+export { dummyData1, dummyData2, dummyData3 as dummyData }

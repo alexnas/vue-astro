@@ -10,6 +10,8 @@ export const useAstroDataStore = defineStore('astroData', () => {
   const baseLevelFlatPoly = ref<string[]>([]) // Base lavel ids in POLY groups
   const idsAllArr = reactive<string[]>(Object.keys(initObj)) // All ids (keys) from initial object
   const convertedRes = ref<IConverted2>({}) // Resulted object after all convertions
+  const currenLevel = ref<number>(1)
+  const idsByLevel = reactive<string[][]>([])
 
   const convertedInitDataArr = computed(() => {
     const arr = [] as IConverted1[]
@@ -21,15 +23,15 @@ export const useAstroDataStore = defineStore('astroData', () => {
     return arr
   })
 
-  const convertedInitDataObj = computed(() => {
+  const convertedInitDataObj = computed((): IConverted2 => {
     return getConvertedDataObj()
   })
 
-  const convertedResultDataObj = computed(() => {
+  const convertedResultDataObj = computed((): IConverted2 => {
     return getConvertedDataObj()
   })
 
-  const getConvertedDataObj = () => {
+  const getConvertedDataObj = (): IConverted2 => {
     const obj = {} as IConverted2
     Object.keys(initObj).forEach((planet) => {
       const parent: string = initObj[planet]
@@ -38,7 +40,48 @@ export const useAstroDataStore = defineStore('astroData', () => {
     return obj
   }
 
-  // ==========================================
+  const baseLevelFlatTotal = computed((): string[] => {
+    return [...baseLevelFlatMono, ...baseLevelFlatPoly.value]
+  })
+
+  const allLevelsFlatTotal = computed((): string[] => {
+    let res: string[] = []
+    idsByLevel.forEach((item: string[]) => {
+      res = [...res, ...item]
+    })
+    return res
+  })
+
+  const idsCurrentRest = computed(() => {
+    let difference: string[] = []
+    difference = idsAllArr.filter((item) => !allLevelsFlatTotal.value.includes(item))
+    return difference
+  })
+
+  const getCurrentLevelIds = () => {
+    getBaseLevel()
+
+    while (idsCurrentRest.value.length > 0 && currenLevel.value < 12) {
+      currenLevel.value += 1
+
+      const levelFlatIds: string[] = []
+      idsAllArr.forEach((id) => {
+        if (
+          allLevelsFlatTotal.value.includes(initObj[id]) &&
+          !allLevelsFlatTotal.value.includes(id)
+        ) {
+          levelFlatIds.push(id)
+          convertedRes.value[id]['level'] = currenLevel.value
+          if (convertedRes.value[initObj[id]]) {
+            convertedRes.value[initObj[id]]['children'].push(id)
+          }
+        }
+      })
+
+      idsByLevel.push(levelFlatIds)
+    }
+  }
+
   const getBaseLevel = () => {
     const checkedIdsSafe = [] // Ids already checked in the cycles
 
@@ -103,20 +146,26 @@ export const useAstroDataStore = defineStore('astroData', () => {
     })
 
     convertedRes.value = convertedResultDataObj.value
+    idsByLevel.push(baseLevelFlatTotal.value)
 
     return { baseLevel, baseLevelFlatMono, baseLevelFlatPoly, idsAllArr }
   }
-  // ==========================================
 
   return {
     initObj,
     baseLevel,
     baseLevelFlatMono,
     baseLevelFlatPoly,
+    baseLevelFlatTotal,
     idsAllArr,
     convertedInitDataArr,
     convertedInitDataObj,
     convertedRes,
-    getBaseLevel
+    idsCurrentRest,
+    currenLevel,
+    idsByLevel,
+    allLevelsFlatTotal,
+    getBaseLevel,
+    getCurrentLevelIds
   }
 })
