@@ -16,7 +16,7 @@ interface IConverted1 {
   id: string
   parent: string
   level: number
-  children: IConverted1 | []
+  children: string[]
 }
 
 type IConverted2 = { [key: string]: IConverted1 }

@@ -8,16 +8,16 @@ const astroDataStore = useAstroDataStore()
 const {
   initObj,
   baseLevel,
-  baseLevelFlatMono,
-  baseLevelFlatPoly,
-  idsAllArr,
   convertedInitDataArr,
   convertedInitDataObj,
-  convertedRes
+  convertedRes,
+  baseLevelFlatTotal,
+  idsByLevel,
+  allLevelsFlatTotal
 } = storeToRefs(astroDataStore)
 
 onMounted(() => {
-  astroDataStore.getBaseLevel()
+  astroDataStore.getCurrentLevelIds()
 })
 </script>
 
@@ -37,9 +37,9 @@ onMounted(() => {
         <h2 class="text-2xl font-medium text-teal-400 text-center">Result Data</h2>
         <div class="flex-col space-y-4">
           <DataCard title="BASE Level" :data="baseLevel" />
-          <DataCard title="BASE Level Flat MONO" :data="baseLevelFlatMono" />
-          <DataCard title="BASE Level Flat POLY" :data="baseLevelFlatPoly" />
-          <DataCard title=" All IDs Flat" :data="idsAllArr" />
+          <DataCard title="BASE Level Flat TOTAL" :data="baseLevelFlatTotal" />
+          <DataCard title="All Parent IDs by Level" :data="idsByLevel" />
+          <DataCard title="Parent IDs Flat TOTAL" :data="allLevelsFlatTotal" />
 
           <hr class="w-full h-1 py-3 bg-teal-200 border-0 rounded dark:bg-gray-700" />
 
