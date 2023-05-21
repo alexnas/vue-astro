@@ -9,6 +9,7 @@
         <nav class="text-white">
           <router-link to="/">Home</router-link>
           <router-link class="ml-2" to="/astro">Astro</router-link>
+          <router-link class="ml-2" to="/chart">Chart</router-link>
         </nav>
       </div>
     </nav>

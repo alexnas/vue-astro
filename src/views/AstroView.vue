@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import DataCard from '@/components/DataCard.vue'
 import { useAstroDataStore } from '@/stores/astroData'
@@ -15,10 +14,6 @@ const {
   idsByLevel,
   allLevelsFlatTotal
 } = storeToRefs(astroDataStore)
-
-onMounted(() => {
-  astroDataStore.getCurrentLevelIds()
-})
 </script>
 
 <template>

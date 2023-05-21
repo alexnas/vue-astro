@@ -1,4 +1,4 @@
-import { computed, reactive, ref } from 'vue'
+import { onMounted, computed, reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { IConverted1, IConverted2, IPersonSet } from './../types'
 import { dummyData } from '@/data/basicData'
@@ -150,6 +150,10 @@ export const useAstroDataStore = defineStore('astroData', () => {
 
     return { baseLevel, baseLevelFlatMono, baseLevelFlatPoly, idsAllArr }
   }
+
+  onMounted(() => {
+    getCurrentLevelIds()
+  })
 
   return {
     initObj,
