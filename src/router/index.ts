@@ -15,6 +15,11 @@ const router = createRouter({
       component: () => import('../views/AstroView.vue')
     },
     {
+      path: '/chart',
+      name: 'chart',
+      component: () => import('../views/ChartView.vue')
+    },
+    {
       path: '/:catchAll(.*)*',
       redirect: { name: 'home' }
     }
