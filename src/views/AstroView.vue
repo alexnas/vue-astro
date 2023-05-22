@@ -4,16 +4,8 @@ import DataCard from '@/components/DataCard.vue'
 import { useAstroDataStore } from '@/stores/astroData'
 
 const astroDataStore = useAstroDataStore()
-const {
-  initObj,
-  baseLevel,
-  convertedInitDataArr,
-  convertedInitDataObj,
-  convertedRes,
-  baseLevelFlatTotal,
-  idsByLevel,
-  allLevelsFlatTotal
-} = storeToRefs(astroDataStore)
+const { initObj, baseLevel, convertedRes, baseLevelFlatTotal, idsByLevel, allLevelsFlatTotal } =
+  storeToRefs(astroDataStore)
 </script>
 
 <template>
@@ -24,8 +16,6 @@ const {
         <h2 class="text-2xl font-medium text-teal-400 text-center">Initial Data</h2>
         <div class="flex-col space-y-4">
           <DataCard title="Initial Astro Data" :data="initObj" />
-          <DataCard title="Converted Astro Data Arr" :data="convertedInitDataArr" />
-          <DataCard title="Converted Astro Data obj" :data="convertedInitDataObj" />
         </div>
       </div>
       <div>
