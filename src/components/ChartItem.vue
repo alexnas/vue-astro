@@ -17,6 +17,7 @@ defineProps({
     class="px-2"
   >
     <ul class="flex" v-for="planetChild in data[planet]['children']" :key="planetChild">
+      <div class="flex items-center w-6 h-12">{{ '<--' }}</div>
       <div class="p-2 mb-1 min-w-sm w-20 h-12 rounded-xl border-2">
         {{ planetChild }}
       </div>

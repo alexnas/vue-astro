@@ -18,14 +18,25 @@ defineProps({
 </script>
 
 <template>
-  <div class="p-4 max-w-xl mx-auto bg-white rounded-xl shadow-lg flex items-center space-x-4">
+  <div
+    class="p-4 w-fit min-w-1/2 max-w-fit mx-auto bg-white rounded-xl shadow-lg flex items-center space-x-4"
+  >
     <div>
-      <div class="mb-4 text-xl font-medium text-black">{{ title }}</div>
-      <div class="text-slate-500" v-for="planet in show" :key="planet">
-        <div class="flex">
-          <div class="p-2 mb-4 min-w-sm w-20 h-12 rounded-xl border-2">{{ planet }}</div>
+      <div class="mb-4 w-full text-xl font-medium text-black">{{ title }}</div>
+      <div
+        class="p-3 mb-6 text-slate-500 rounded-xl border-t-2 border-l-8 border-l-teal-200"
+        v-for="(planetGroup, idx) in show"
+        :key="idx"
+      >
+        <div class="text-slate-500" v-for="planet in planetGroup" :key="planet">
+          <div class="flex">
+            <div class="p-2 min-w-sm w-20 min-h-fit rounded-xl border-2 border-teal-200">
+              {{ planet }}
+            </div>
 
-          <ChartItem :data="data" :planet="planet" />
+            <ChartItem :data="data" :planet="planet" />
+          </div>
+          <hr class="h-0.5 my-2 border-0 rounded bg-gray-300" />
         </div>
       </div>
     </div>
