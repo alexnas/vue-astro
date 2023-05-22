@@ -23,17 +23,21 @@ defineProps({
   >
     <div>
       <div class="mb-4 w-full text-xl font-medium text-black">{{ title }}</div>
-      <div class="text-slate-500" v-for="planet in show" :key="planet">
-        <div class="flex">
-          <div
-            class="p-2 min-w-sm w-20 min-h-fit rounded-xl border-2 border-4 border-teal-200 border-b-teal-500"
-          >
-            {{ planet }}
-          </div>
+      <div
+        class="p-3 mb-6 text-slate-500 rounded-xl border-t-2 border-l-8 border-l-teal-200"
+        v-for="(planetGroup, idx) in show"
+        :key="idx"
+      >
+        <div class="text-slate-500" v-for="planet in planetGroup" :key="planet">
+          <div class="flex">
+            <div class="p-2 min-w-sm w-20 min-h-fit rounded-xl border-2 border-teal-200">
+              {{ planet }}
+            </div>
 
-          <ChartItem :data="data" :planet="planet" />
+            <ChartItem :data="data" :planet="planet" />
+          </div>
+          <hr class="h-0.5 my-2 border-0 rounded bg-gray-300" />
         </div>
-        <hr class="h-1 my-3 border-0 rounded bg-gray-200" />
       </div>
     </div>
   </div>

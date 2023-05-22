@@ -5,7 +5,7 @@ import ChartCard from '@/components/ChartCard.vue'
 import { useAstroDataStore } from '@/stores/astroData'
 
 const astroDataStore = useAstroDataStore()
-const { initObj, convertedRes, idsByLevel, allLevelsFlatTotal, baseLevelFlatTotal } =
+const { initObj, convertedRes, idsByLevel, allLevelsFlatTotal, baseLevel } =
   storeToRefs(astroDataStore)
 </script>
 
@@ -13,7 +13,7 @@ const { initObj, convertedRes, idsByLevel, allLevelsFlatTotal, baseLevelFlatTota
   <main class="mx-auto max-w-screen-xl">
     <h1 class="text-3xl font-bold underline text-teal-400 text-center my-4">Astro Show Chart</h1>
     <div class="px-4">
-      <ChartCard title="Result Astro Data" :data="convertedRes" :show="baseLevelFlatTotal" />
+      <ChartCard title="Result Astro Data" :data="convertedRes" :show="baseLevel" />
     </div>
 
     <h1 class="text-3xl font-bold underline text-teal-400 text-center my-4">Computed Data</h1>
