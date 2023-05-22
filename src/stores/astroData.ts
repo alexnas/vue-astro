@@ -10,8 +10,9 @@ export const useAstroDataStore = defineStore('astroData', () => {
   const baseLevelFlatPoly = ref<string[]>([]) // Base lavel ids in POLY groups
   const idsAllArr = reactive<string[]>(Object.keys(initObj)) // All ids (keys) from initial object
   const convertedRes = ref<IConverted2>({}) // Resulted object after all convertions
-  const currenLevel = ref<number>(1)
-  const idsByLevel = reactive<string[][]>([])
+  const additionalDataObj = ref<IConverted2>({}) // Data object for additional Ids (for vulcan and earth)
+  const currenLevel = ref<number>(1) // Current level number
+  const idsByLevel = reactive<string[][]>([]) // Ids, grouped by level
 
   const convertedInitDataArr = computed(() => {
     const arr = [] as IConverted1[]
@@ -92,6 +93,13 @@ export const useAstroDataStore = defineStore('astroData', () => {
         checkedIdsSafe.push(initObj[id])
         baseLevel.push([initObj[id]])
         convertedResultDataObj.value[id]['level'] = 1
+
+        additionalDataObj.value[initObj[id]] = {
+          id: initObj[id],
+          parent: initObj[id],
+          level: 1,
+          children: []
+        }
       }
     })
 
@@ -145,7 +153,7 @@ export const useAstroDataStore = defineStore('astroData', () => {
       convertedResultDataObj.value[id]['level'] = 1
     })
 
-    convertedRes.value = convertedResultDataObj.value
+    convertedRes.value = { ...convertedResultDataObj.value, ...additionalDataObj.value }
     idsByLevel.push(baseLevelFlatTotal.value)
 
     return { baseLevel, baseLevelFlatMono, baseLevelFlatPoly, idsAllArr }
