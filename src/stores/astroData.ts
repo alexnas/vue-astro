@@ -1,6 +1,6 @@
 import { onMounted, computed, reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { IConverted1, IConverted2, IPersonSet } from './../types'
+import type { IConverted2, IPersonSet } from './../types'
 import { dummyData } from '@/data/basicData'
 
 export const useAstroDataStore = defineStore('astroData', () => {
