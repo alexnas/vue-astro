@@ -14,20 +14,6 @@ export const useAstroDataStore = defineStore('astroData', () => {
   const currenLevel = ref<number>(1) // Current level number
   const idsByLevel = reactive<string[][]>([]) // Ids, grouped by level
 
-  // const convertedInitDataArr = computed(() => {
-  //   const arr = [] as IConverted1[]
-
-  //   Object.keys(initObj).forEach((planet) => {
-  //     const parent: string = initObj[planet]
-  //     arr.push({ id: planet, parent, level: -1, children: [] })
-  //   })
-  //   return arr
-  // })
-
-  // const convertedInitDataObj = computed((): IConverted2 => {
-  //   return getConvertedDataObj()
-  // })
-
   const convertedResultDataObj = computed((): IConverted2 => {
     return getConvertedDataObj()
   })
@@ -170,8 +156,6 @@ export const useAstroDataStore = defineStore('astroData', () => {
     baseLevelFlatPoly,
     baseLevelFlatTotal,
     idsAllArr,
-    // convertedInitDataArr,
-    // convertedInitDataObj,
     convertedRes,
     idsCurrentRest,
     currenLevel,
