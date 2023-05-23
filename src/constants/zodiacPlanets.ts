@@ -28,7 +28,7 @@ import {
   PISCES
 } from './zodiacConstants'
 
-const grades = {
+const zodiacPlanets = {
   [ARIES]: [MARS, MERCURY, MERCURY],
   [TAURUS]: [VENUS, VULCAN, VULCAN],
   [GEMINI]: [MERCURY, VENUS, EARTH],
@@ -43,4 +43,4 @@ const grades = {
   [PISCES]: [JUPITER, PLUTO, PLUTO]
 }
 
-export default grades
+export default zodiacPlanets
