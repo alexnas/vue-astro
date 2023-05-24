@@ -1,18 +1,24 @@
-import { onMounted, reactive } from 'vue'
+import { computed, onMounted, reactive } from 'vue'
 import { defineStore } from 'pinia'
-import type { IPersonSet, IZodiacSet } from './../types'
+import type { IPersonSet } from './../types'
 import { dummyZodiac } from '@/data/dummyZodiacData'
 import zodiacPlanets from '@/constants/zodiacPlanets'
 
 export const useZodiacDataStore = defineStore('zodiacData', () => {
   const initZodiacObj = reactive<IPersonSet>({ ...dummyZodiac }) // Initial zodiac data to compute
-  const initAstroObjByGrade = reactive<IPersonSet>({ ...dummyZodiac })
-  const initAstroObjAllGrades = reactive<IZodiacSet>({})
+  const initAstroObjFirst = reactive<IPersonSet>({ ...dummyZodiac })
+  const initAstroObjSecond = reactive<IPersonSet>({ ...dummyZodiac })
+  const initAstroObjThird = reactive<IPersonSet>({ ...dummyZodiac })
+
+  const initAstroObjAll = computed<IPersonSet[]>(() => {
+    return [initAstroObjFirst, initAstroObjSecond, initAstroObjThird]
+  })
 
   const getAstroFromZodiac = () => {
     Object.keys(initZodiacObj).forEach((id) => {
-      initAstroObjByGrade[id] = zodiacPlanets[initZodiacObj[id]][0]
-      initAstroObjAllGrades[id] = zodiacPlanets[initZodiacObj[id]]
+      initAstroObjFirst[id] = zodiacPlanets[initZodiacObj[id]][0]
+      initAstroObjSecond[id] = zodiacPlanets[initZodiacObj[id]][1]
+      initAstroObjThird[id] = zodiacPlanets[initZodiacObj[id]][2]
     })
   }
 
@@ -22,7 +28,6 @@ export const useZodiacDataStore = defineStore('zodiacData', () => {
 
   return {
     initZodiacObj,
-    initAstroObjByGrade,
-    initAstroObjAllGrades
+    initAstroObjAll
   }
 })

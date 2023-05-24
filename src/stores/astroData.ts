@@ -5,8 +5,8 @@ import { useZodiacDataStore } from '@/stores/zodiacData'
 
 export const useAstroDataStore = defineStore('astroData', () => {
   const zodiacDataStore = useZodiacDataStore()
-  const { initAstroObjByGrade } = storeToRefs(zodiacDataStore)
-  let initObj = reactive<IPersonSet>({ ...initAstroObjByGrade.value }) // Initial data to compute
+  const { initAstroObjAll } = storeToRefs(zodiacDataStore)
+  let initObj = reactive<IPersonSet>({ ...initAstroObjAll.value[0] }) // Initial data to compute
 
   const baseLevel = reactive<string[][]>([]) // Base lavel ids all around
   const baseLevelFlatMono = reactive<string[]>([]) // Base lavel ids in MONO groups
@@ -48,8 +48,8 @@ export const useAstroDataStore = defineStore('astroData', () => {
     return difference
   })
 
-  const getCurrentLevelIds = () => {
-    getBaseLevel()
+  const getCurrentLevelIds = (grade: number = 0) => {
+    getBaseLevel(grade)
 
     while (idsCurrentRest.value.length > 0 && currenLevel.value < 12) {
       currenLevel.value += 1
@@ -72,8 +72,8 @@ export const useAstroDataStore = defineStore('astroData', () => {
     }
   }
 
-  const getBaseLevel = () => {
-    initObj = { ...initAstroObjByGrade.value }
+  const getBaseLevel = (grade: number = 0) => {
+    initObj = { ...initAstroObjAll.value[grade] }
     const checkedIdsSafe = [] // Ids already checked in the cycles
 
     // Get Earth and Vulcan
