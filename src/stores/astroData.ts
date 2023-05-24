@@ -1,10 +1,13 @@
 import { onMounted, computed, reactive, ref } from 'vue'
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import type { IConverted2, IPersonSet } from './../types'
-import { dummyData } from '@/data/basicData'
+import { useZodiacDataStore } from '@/stores/zodiacData'
 
 export const useAstroDataStore = defineStore('astroData', () => {
-  const initObj = reactive<IPersonSet>({ ...dummyData }) // Initial data to compute
+  const zodiacDataStore = useZodiacDataStore()
+  const { initAstroObjByGrade } = storeToRefs(zodiacDataStore)
+  let initObj = reactive<IPersonSet>({ ...initAstroObjByGrade.value }) // Initial data to compute
+
   const baseLevel = reactive<string[][]>([]) // Base lavel ids all around
   const baseLevelFlatMono = reactive<string[]>([]) // Base lavel ids in MONO groups
   const baseLevelFlatPoly = ref<string[]>([]) // Base lavel ids in POLY groups
@@ -70,6 +73,7 @@ export const useAstroDataStore = defineStore('astroData', () => {
   }
 
   const getBaseLevel = () => {
+    initObj = { ...initAstroObjByGrade.value }
     const checkedIdsSafe = [] // Ids already checked in the cycles
 
     // Get Earth and Vulcan

@@ -25,8 +25,9 @@ import {
   AQUARIUS,
   PISCES
 } from '../constants/zodiacConstants'
+import type { IPersonSet } from '@/types'
 
-const dummyZodiac1 = {
+const dummyZodiac1: IPersonSet = {
   [SUN]: PISCES,
   [MOON]: LIBRA,
   [MERCURY]: PISCES,
@@ -39,7 +40,7 @@ const dummyZodiac1 = {
   [PLUTO]: LEO
 }
 
-const dummyZodiac2 = {
+const dummyZodiac2: IPersonSet = {
   [SUN]: TAURUS,
   [MOON]: SCORPIO,
   [MERCURY]: TAURUS,

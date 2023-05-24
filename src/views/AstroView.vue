@@ -2,10 +2,15 @@
 import { storeToRefs } from 'pinia'
 import DataCard from '@/components/DataCard.vue'
 import { useAstroDataStore } from '@/stores/astroData'
+import { useZodiacDataStore } from '@/stores/zodiacData'
+import zodiacPlanets from '@/constants/zodiacPlanets'
 
 const astroDataStore = useAstroDataStore()
 const { initObj, baseLevel, convertedRes, baseLevelFlatTotal, idsByLevel, allLevelsFlatTotal } =
   storeToRefs(astroDataStore)
+
+const zodiacDataStore = useZodiacDataStore()
+const { initZodiacObj, initAstroObjAllGrades, initAstroObjByGrade } = storeToRefs(zodiacDataStore)
 </script>
 
 <template>
@@ -16,6 +21,11 @@ const { initObj, baseLevel, convertedRes, baseLevelFlatTotal, idsByLevel, allLev
         <h2 class="text-2xl font-medium text-teal-400 text-center">Initial Data</h2>
         <div class="flex-col space-y-4">
           <DataCard title="Initial Astro Data" :data="initObj" />
+          <hr class="w-full h-1 py-3 bg-teal-200 border-0 rounded dark:bg-gray-700" />
+          <DataCard title="Initial Zodiac Data" :data="initZodiacObj" />
+          <DataCard title="initAstroObjByGrade[0]" :data="initAstroObjByGrade" />
+          <DataCard title="initAstroObjAllGrades" :data="initAstroObjAllGrades" />
+          <DataCard title="Zodiac to Planets transform" :data="zodiacPlanets" />
         </div>
       </div>
       <div>

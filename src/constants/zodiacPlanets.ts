@@ -27,8 +27,9 @@ import {
   AQUARIUS,
   PISCES
 } from './zodiacConstants'
+import type { IZodiacSet } from '@/types'
 
-const zodiacPlanets = {
+const zodiacPlanets: IZodiacSet = {
   [ARIES]: [MARS, MERCURY, MERCURY],
   [TAURUS]: [VENUS, VULCAN, VULCAN],
   [GEMINI]: [MERCURY, VENUS, EARTH],
