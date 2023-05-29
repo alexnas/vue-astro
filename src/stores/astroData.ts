@@ -1,171 +1,184 @@
-import { onMounted, computed, reactive, ref } from 'vue'
-import { defineStore, storeToRefs } from 'pinia'
-import type { IConverted2, IPersonSet } from './../types'
-import { useZodiacDataStore } from '@/stores/zodiacData'
+import { ref } from 'vue'
+import { defineStore } from 'pinia'
+import type { IConverted2, IPersonSet } from '../types'
+import { dummyZodiac } from '@/data/dummyZodiacData'
+import zodiacPlanets from '@/constants/zodiacPlanets'
+import { dummyData } from '@/data/basicData'
 
 export const useAstroDataStore = defineStore('astroData', () => {
-  const zodiacDataStore = useZodiacDataStore()
-  const { initAstroObjAll } = storeToRefs(zodiacDataStore)
-  let initObj = reactive<IPersonSet>({ ...initAstroObjAll.value[0] }) // Initial data to compute
-
-  const baseLevel = reactive<string[][]>([]) // Base lavel ids all around
-  const baseLevelFlatMono = reactive<string[]>([]) // Base lavel ids in MONO groups
-  const baseLevelFlatPoly = ref<string[]>([]) // Base lavel ids in POLY groups
-  const idsAllArr = reactive<string[]>(Object.keys(initObj)) // All ids (keys) from initial object
+  const initObj = ref<IPersonSet>({}) // Initial data to compute - old fashion
+  const initAstroDummyObj = ref<IPersonSet>({}) // Initial data to compute - from dummy Astro
+  const initZodiacObj = ref<IPersonSet>({}) // Initial zodiac data to compute - from dummy Zodiac
+  const initAstroObjAll = ref<IPersonSet[]>([]) // Initial astro data from zodiac to compute - from dummy Zodiac
+  const baseLevel = ref<string[][]>([]) // Base lavel ids all around
+  const baseLevelFlat = ref<string[]>([]) // Base lavel ids all around - flat array
+  const allBranches = ref<string[][]>([]) // All branches
+  const tails = ref<string[]>([]) // tail items in all branches
   const convertedRes = ref<IConverted2>({}) // Resulted object after all convertions
-  const additionalDataObj = ref<IConverted2>({}) // Data object for additional Ids (for vulcan and earth)
-  const currenLevel = ref<number>(1) // Current level number
-  const idsByLevel = reactive<string[][]>([]) // Ids, grouped by level
 
-  const convertedResultDataObj = computed((): IConverted2 => {
-    return getConvertedDataObj()
-  })
-
-  const getConvertedDataObj = (): IConverted2 => {
-    const obj = {} as IConverted2
-    Object.keys(initObj).forEach((planet) => {
-      const parent: string = initObj[planet]
-      obj[planet] = { id: planet, parent, level: -1, children: [] }
+  const getEmptyResObj = (initialObj: IPersonSet): IConverted2 => {
+    const resObj = {} as IConverted2
+    Object.keys(initialObj).forEach((planet) => {
+      const parent: string = initialObj[planet]
+      resObj[planet] = { id: planet, parent, level: -1, children: [] }
     })
-    return obj
+    Object.values(initialObj).forEach((planet) => {
+      if (planet === 'earth' || planet === 'vulcan') {
+        resObj[planet] = { id: planet, parent: planet, level: 1, children: [] }
+      }
+    })
+    return resObj
   }
 
-  const baseLevelFlatTotal = computed((): string[] => {
-    return [...baseLevelFlatMono, ...baseLevelFlatPoly.value]
-  })
+  type IInvertedObj = { [key: string]: string[] }
 
-  const allLevelsFlatTotal = computed((): string[] => {
-    let res: string[] = []
-    idsByLevel.forEach((item: string[]) => {
-      res = [...res, ...item]
+  const inverseInitObj = (initialObj: IPersonSet): IInvertedObj => {
+    const invertedObj = {} as IInvertedObj
+    Object.values(initialObj).forEach((currVal) => {
+      invertedObj[currVal] = []
+    })
+
+    Object.keys(initialObj).forEach((currKey) => {
+      const currVal: string = initialObj[currKey]
+      if (!baseLevelFlat.value.includes(currKey)) {
+        invertedObj[currVal].push(currKey)
+      }
+    })
+    return invertedObj
+  }
+
+  const getResIdsObj = (): IConverted2 => {
+    const EmptyResObj = getEmptyResObj({ ...initObj.value })
+    const invertedObj: IInvertedObj = inverseInitObj({ ...initObj.value })
+    const obj: IConverted2 = { ...EmptyResObj }
+
+    allBranches.value.forEach((branch) => {
+      for (let i = 0; i < branch.length; i++) {
+        const planet = branch[i]
+        const parent: string = initObj.value[planet] || planet
+        obj[planet]['parent'] = parent
+        obj[planet]['level'] = branch.length - i
+      }
+      Object.keys(invertedObj).forEach((currKey) => {
+        obj[currKey]['children'] = invertedObj[currKey]
+      })
+    })
+
+    convertedRes.value = obj
+    return convertedRes.value
+  }
+  const chooseInitialAstroData = () => {
+    initObj.value = { ...initAstroObjAll.value[0] }
+    // initObj.value = { ...initAstroObjAll.value[1] }
+    // initObj.value = { ...initAstroObjAll.value[2] }
+    // initObj.value = { ...initAstroDummyObj.value }
+  }
+
+  const getDummyAstroData = () => {
+    initAstroDummyObj.value = { ...dummyData }
+  }
+
+  const getZodiacData = () => {
+    initZodiacObj.value = { ...dummyZodiac }
+  }
+
+  const getAstroFromZodiac = () => {
+    getZodiacData()
+    getDummyAstroData()
+    const initAstroObjFirst: IPersonSet | null = {}
+    const initAstroObjSecond: IPersonSet | null = {}
+    const initAstroObjThird: IPersonSet | null = {}
+    Object.keys(initZodiacObj.value).forEach((id) => {
+      initAstroObjFirst[id] = zodiacPlanets[initZodiacObj.value[id]][0]
+      initAstroObjSecond[id] = zodiacPlanets[initZodiacObj.value[id]][1]
+      initAstroObjThird[id] = zodiacPlanets[initZodiacObj.value[id]][2]
+    })
+    initAstroObjAll.value = [initAstroObjFirst, initAstroObjSecond, initAstroObjThird]
+    return [initAstroObjFirst, initAstroObjSecond, initAstroObjThird]
+  }
+
+  const getAstroData = () => {
+    chooseInitialAstroData()
+
+    const ids = Object.keys({ ...initObj.value })
+    const parents = Object.values({ ...initObj.value })
+    tails.value = ids.filter((id) => !parents.includes(id))
+
+    let stack: string[] = []
+    const lines: string[][] = []
+    const branches: string[][] = []
+    const circles: string[][] = []
+
+    tails.value.forEach((tail) => {
+      let curTail: string = tail
+      stack.push(curTail)
+
+      do {
+        if (!stack.includes(curTail)) stack.push(curTail)
+        if (!stack.includes(initObj.value[curTail])) stack.push(initObj.value[curTail])
+        curTail = initObj.value[curTail]
+        let branch: string[] = []
+        let circle: string[] = []
+
+        if (curTail === 'earth' || curTail === 'vulcan') {
+          branch = stack
+          circle = [curTail]
+          branches.push(branch)
+          circles.push(circle)
+          break
+        }
+        if (stack.includes(initObj.value[curTail])) {
+          const { lineArr, circleArr } = separateLineAndCircle(stack, initObj.value[curTail])
+          branch = lineArr
+          circle = circleArr
+
+          branches.push(branch)
+        }
+        const isIncludedAlready = isItemExist(circles, circle[0])
+        if (circle.length > 0 && !isIncludedAlready) {
+          circles.push(circle)
+        }
+      } while (!stack.includes(initObj.value[curTail]))
+
+      lines.push(stack)
+      stack = []
+    })
+    baseLevel.value = circles
+    baseLevelFlat.value = circles.flat()
+    allBranches.value = branches
+    return 'inside'
+  }
+
+  const isItemExist = (circles: string[][], item: string) => {
+    let res = false
+    circles.forEach((circleItem) => {
+      if (circleItem.includes(item)) {
+        res = true
+      }
     })
     return res
-  })
-
-  const idsCurrentRest = computed(() => {
-    let difference: string[] = []
-    difference = idsAllArr.filter((item) => !allLevelsFlatTotal.value.includes(item))
-    return difference
-  })
-
-  const getCurrentLevelIds = (grade: number = 0) => {
-    getBaseLevel(grade)
-
-    while (idsCurrentRest.value.length > 0 && currenLevel.value < 12) {
-      currenLevel.value += 1
-
-      const levelFlatIds: string[] = []
-      idsAllArr.forEach((id) => {
-        if (
-          allLevelsFlatTotal.value.includes(initObj[id]) &&
-          !allLevelsFlatTotal.value.includes(id)
-        ) {
-          levelFlatIds.push(id)
-          convertedRes.value[id]['level'] = currenLevel.value
-          if (convertedRes.value[initObj[id]]) {
-            convertedRes.value[initObj[id]]['children'].push(id)
-          }
-        }
-      })
-
-      idsByLevel.push(levelFlatIds)
-    }
   }
 
-  const getBaseLevel = (grade: number = 0) => {
-    initObj = { ...initAstroObjAll.value[grade] }
-    const checkedIdsSafe = [] // Ids already checked in the cycles
+  const separateLineAndCircle = (arr: string[], item: string) => {
+    const idx: number = arr.findIndex((i) => i === item)
+    const lineArr = arr.slice(0, idx + 1)
+    const circleArr = arr.slice(idx, arr.length)
 
-    // Get Earth and Vulcan
-    idsAllArr.forEach((id) => {
-      if (initObj[id] === 'earth' || initObj[id] === 'vulcan') {
-        baseLevelFlatMono.push(initObj[id])
-        checkedIdsSafe.push(initObj[id])
-        baseLevel.push([initObj[id]])
-        convertedResultDataObj.value[id]['level'] = 1
-
-        additionalDataObj.value[initObj[id]] = {
-          id: initObj[id],
-          parent: initObj[id],
-          level: 1,
-          children: []
-        }
-      }
-    })
-
-    // Get Mono planets in the base lavel
-    idsAllArr.forEach((id) => {
-      if (initObj[id] === id) {
-        baseLevelFlatMono.push(initObj[id])
-        checkedIdsSafe.push(initObj[id])
-        baseLevel.push([initObj[id]])
-        convertedResultDataObj.value[id]['level'] = 1
-      }
-    })
-
-    // Get Poly planets in the base lavel
-    idsAllArr.forEach((id) => {
-      if (baseLevelFlatMono.includes(id) || baseLevelFlatPoly.value.includes(id)) {
-        return
-      }
-
-      // Find Cycles
-      const cycleFoundArr = []
-      let currCycleId = id
-
-      let startFoundCycle = id
-      let tempCounter = 0
-      while (tempCounter <= 10) {
-        tempCounter++
-        cycleFoundArr.push(currCycleId)
-        if (
-          !initObj[currCycleId] ||
-          baseLevelFlatMono.includes(initObj[currCycleId]) ||
-          baseLevelFlatPoly.value.includes(initObj[currCycleId])
-        ) {
-          break
-        }
-
-        if (cycleFoundArr.includes(initObj[currCycleId])) {
-          startFoundCycle = initObj[currCycleId]
-          const cycleFoundResult = cycleFoundArr.splice(cycleFoundArr.indexOf(startFoundCycle))
-
-          baseLevel.push(cycleFoundResult)
-          baseLevelFlatPoly.value = [...baseLevelFlatPoly.value, ...cycleFoundResult]
-          break
-        }
-
-        currCycleId = initObj[currCycleId]
-      }
-    })
-
-    baseLevelFlatPoly.value.forEach((id) => {
-      convertedResultDataObj.value[id]['level'] = 1
-    })
-
-    convertedRes.value = { ...convertedResultDataObj.value, ...additionalDataObj.value }
-    idsByLevel.push(baseLevelFlatTotal.value)
-
-    return { baseLevel, baseLevelFlatMono, baseLevelFlatPoly, idsAllArr }
+    return { lineArr, circleArr }
   }
-
-  onMounted(() => {
-    getCurrentLevelIds()
-  })
 
   return {
     initObj,
+    initAstroDummyObj,
+    initAstroObjAll,
+    initZodiacObj,
     baseLevel,
-    baseLevelFlatMono,
-    baseLevelFlatPoly,
-    baseLevelFlatTotal,
-    idsAllArr,
+    allBranches,
     convertedRes,
-    idsCurrentRest,
-    currenLevel,
-    idsByLevel,
-    allLevelsFlatTotal,
-    getBaseLevel,
-    getCurrentLevelIds
+    tails,
+    getDummyAstroData,
+    getAstroData,
+    getAstroFromZodiac,
+    getResIdsObj
   }
 })

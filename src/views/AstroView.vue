@@ -1,15 +1,26 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import DataCard from '@/components/DataCard.vue'
 import { useAstroDataStore } from '@/stores/astroData'
-import { useZodiacDataStore } from '@/stores/zodiacData'
 
 const astroDataStore = useAstroDataStore()
-const { initObj, baseLevel, convertedRes, baseLevelFlatTotal, idsByLevel, allLevelsFlatTotal } =
-  storeToRefs(astroDataStore)
+const {
+  initObj,
+  convertedRes,
+  baseLevel,
+  allBranches,
+  initAstroDummyObj,
+  initZodiacObj,
+  initAstroObjAll
+} = storeToRefs(astroDataStore)
 
-const zodiacDataStore = useZodiacDataStore()
-const { initZodiacObj, initAstroObjAll } = storeToRefs(zodiacDataStore)
+onMounted(() => {
+  astroDataStore.getDummyAstroData()
+  astroDataStore.getAstroFromZodiac()
+  astroDataStore.getAstroData()
+  astroDataStore.getResIdsObj()
+})
 </script>
 
 <template>
@@ -19,25 +30,19 @@ const { initZodiacObj, initAstroObjAll } = storeToRefs(zodiacDataStore)
       <div>
         <h2 class="text-2xl font-medium text-teal-400 text-center">Initial Data</h2>
         <div class="flex-col space-y-4">
-          <DataCard title="Initial Astro Data" :data="initObj" />
-          <hr class="w-full h-1 py-3 bg-teal-200 border-0 rounded dark:bg-gray-700" />
-          <DataCard title="Initial Zodiac Data" :data="initZodiacObj" />
-          <DataCard title="initAstroObjAllGrades[0]" :data="initAstroObjAll[0]" />
-          <DataCard title="initAstroObjAllGrades[1]" :data="initAstroObjAll[1]" />
-          <DataCard title="initAstroObjAllGrades[2]" :data="initAstroObjAll[2]" />
+          <DataCard title="Initial Astro (choosen)" :data="initObj" />
+          <DataCard title="Initial Astro (dummy)" :data="initAstroDummyObj" />
+          <DataCard title="Initial Zodiac All (initAstroObjAll)" :data="initAstroObjAll" />
+          <DataCard title="Initial Zodiac (initZodiacObj) " :data="initZodiacObj" />
         </div>
       </div>
       <div>
         <h2 class="text-2xl font-medium text-teal-400 text-center">Result Data</h2>
+        <DataCard title="Result Astro Data (convertedRes)" :data="convertedRes" />
         <div class="flex-col space-y-4">
-          <DataCard title="BASE Level" :data="baseLevel" />
-          <DataCard title="BASE Level Flat TOTAL" :data="baseLevelFlatTotal" />
-          <DataCard title="All Parent IDs by Level" :data="idsByLevel" />
-          <DataCard title="Parent IDs Flat TOTAL" :data="allLevelsFlatTotal" />
-
           <hr class="w-full h-1 py-3 bg-teal-200 border-0 rounded dark:bg-gray-700" />
-
-          <DataCard title="Result Astro Data (convertedRes)" :data="convertedRes" />
+          <DataCard title="BASE Level" :data="baseLevel" />
+          <DataCard title="All Branches" :data="allBranches" />
         </div>
       </div>
     </div>
