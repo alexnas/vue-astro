@@ -1,20 +1,70 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { IConverted2, IPersonSet } from '../types'
+import type { IConverted2, IPersonSet, IInvertedObj } from '../types'
 import { dummyZodiac } from '@/data/dummyZodiacData'
 import zodiacPlanets from '@/constants/zodiacPlanets'
-import { dummyData } from '@/data/basicData'
 
 export const useAstroDataStore = defineStore('astroData', () => {
-  const initObj = ref<IPersonSet>({}) // Initial data to compute - old fashion
-  const initAstroDummyObj = ref<IPersonSet>({}) // Initial data to compute - from dummy Astro
   const initZodiacObj = ref<IPersonSet>({}) // Initial zodiac data to compute - from dummy Zodiac
-  const initAstroObjAll = ref<IPersonSet[]>([]) // Initial astro data from zodiac to compute - from dummy Zodiac
-  const baseLevel = ref<string[][]>([]) // Base lavel ids all around
-  const baseLevelFlat = ref<string[]>([]) // Base lavel ids all around - flat array
-  const allBranches = ref<string[][]>([]) // All branches
-  const tails = ref<string[]>([]) // tail items in all branches
-  const convertedRes = ref<IConverted2>({}) // Resulted object after all convertions
+  const initAstroObjAllGrades = ref<IPersonSet[]>([]) // Initial astro data from zodiac to compute - from dummy Zodiac
+  const convertedResAllByGrades = ref<IConverted2[]>([]) // Resulted object after all convertions
+  const baseLevelAllByGrades = ref<string[][][]>([]) // Base lavel ids all around
+
+  const getZodiacData = () => {
+    initZodiacObj.value = { ...dummyZodiac }
+  }
+
+  const getAstroFromZodiac = () => {
+    const initAstroObjFirst: IPersonSet | null = {}
+    const initAstroObjSecond: IPersonSet | null = {}
+    const initAstroObjThird: IPersonSet | null = {}
+    Object.keys(initZodiacObj.value).forEach((id) => {
+      initAstroObjFirst[id] = zodiacPlanets[initZodiacObj.value[id]][0]
+      initAstroObjSecond[id] = zodiacPlanets[initZodiacObj.value[id]][1]
+      initAstroObjThird[id] = zodiacPlanets[initZodiacObj.value[id]][2]
+    })
+    initAstroObjAllGrades.value = [initAstroObjFirst, initAstroObjSecond, initAstroObjThird]
+
+    return [initAstroObjFirst, initAstroObjSecond, initAstroObjThird]
+  }
+
+  const getConvertedResultObj = (): void => {
+    getZodiacData()
+    getAstroFromZodiac()
+
+    initAstroObjAllGrades.value.forEach((initObj) => {
+      const { circles, branches } = getAstroData(initObj)
+      const baseLevelFlat = circles.flat()
+
+      const invertedObj: IInvertedObj = inverseInitObj({ ...initObj }, baseLevelFlat)
+      const convertedRes = getResIdsObj(initObj, invertedObj, branches)
+      convertedResAllByGrades.value.push(convertedRes)
+      baseLevelAllByGrades.value.push(circles)
+    })
+  }
+
+  const getResIdsObj = (
+    initObj: IPersonSet,
+    invertedObj: IInvertedObj,
+    branches: string[][]
+  ): IConverted2 => {
+    const EmptyResObj = getEmptyResObj({ ...initObj })
+    const obj: IConverted2 = { ...EmptyResObj }
+
+    branches.forEach((branch) => {
+      for (let i = 0; i < branch.length; i++) {
+        const planet = branch[i]
+        const parent: string = initObj[planet] || planet
+        obj[planet]['parent'] = parent
+        obj[planet]['level'] = branch.length - i
+      }
+      Object.keys(invertedObj).forEach((currKey) => {
+        obj[currKey]['children'] = invertedObj[currKey]
+      })
+    })
+
+    return obj
+  }
 
   const getEmptyResObj = (initialObj: IPersonSet): IConverted2 => {
     const resObj = {} as IConverted2
@@ -30,9 +80,7 @@ export const useAstroDataStore = defineStore('astroData', () => {
     return resObj
   }
 
-  type IInvertedObj = { [key: string]: string[] }
-
-  const inverseInitObj = (initialObj: IPersonSet): IInvertedObj => {
+  const inverseInitObj = (initialObj: IPersonSet, baseLevelFlat: string[]): IInvertedObj => {
     const invertedObj = {} as IInvertedObj
     Object.values(initialObj).forEach((currVal) => {
       invertedObj[currVal] = []
@@ -40,83 +88,31 @@ export const useAstroDataStore = defineStore('astroData', () => {
 
     Object.keys(initialObj).forEach((currKey) => {
       const currVal: string = initialObj[currKey]
-      if (!baseLevelFlat.value.includes(currKey)) {
+      if (!baseLevelFlat.includes(currKey)) {
         invertedObj[currVal].push(currKey)
       }
     })
     return invertedObj
   }
 
-  const getResIdsObj = (): IConverted2 => {
-    const EmptyResObj = getEmptyResObj({ ...initObj.value })
-    const invertedObj: IInvertedObj = inverseInitObj({ ...initObj.value })
-    const obj: IConverted2 = { ...EmptyResObj }
-
-    allBranches.value.forEach((branch) => {
-      for (let i = 0; i < branch.length; i++) {
-        const planet = branch[i]
-        const parent: string = initObj.value[planet] || planet
-        obj[planet]['parent'] = parent
-        obj[planet]['level'] = branch.length - i
-      }
-      Object.keys(invertedObj).forEach((currKey) => {
-        obj[currKey]['children'] = invertedObj[currKey]
-      })
-    })
-
-    convertedRes.value = obj
-    return convertedRes.value
-  }
-  const chooseInitialAstroData = () => {
-    initObj.value = { ...initAstroObjAll.value[0] }
-    // initObj.value = { ...initAstroObjAll.value[1] }
-    // initObj.value = { ...initAstroObjAll.value[2] }
-    // initObj.value = { ...initAstroDummyObj.value }
-  }
-
-  const getDummyAstroData = () => {
-    initAstroDummyObj.value = { ...dummyData }
-  }
-
-  const getZodiacData = () => {
-    initZodiacObj.value = { ...dummyZodiac }
-  }
-
-  const getAstroFromZodiac = () => {
-    getZodiacData()
-    getDummyAstroData()
-    const initAstroObjFirst: IPersonSet | null = {}
-    const initAstroObjSecond: IPersonSet | null = {}
-    const initAstroObjThird: IPersonSet | null = {}
-    Object.keys(initZodiacObj.value).forEach((id) => {
-      initAstroObjFirst[id] = zodiacPlanets[initZodiacObj.value[id]][0]
-      initAstroObjSecond[id] = zodiacPlanets[initZodiacObj.value[id]][1]
-      initAstroObjThird[id] = zodiacPlanets[initZodiacObj.value[id]][2]
-    })
-    initAstroObjAll.value = [initAstroObjFirst, initAstroObjSecond, initAstroObjThird]
-    return [initAstroObjFirst, initAstroObjSecond, initAstroObjThird]
-  }
-
-  const getAstroData = () => {
-    chooseInitialAstroData()
-
-    const ids = Object.keys({ ...initObj.value })
-    const parents = Object.values({ ...initObj.value })
-    tails.value = ids.filter((id) => !parents.includes(id))
+  const getAstroData = (initObj: IPersonSet) => {
+    const ids = Object.keys({ ...initObj })
+    const parents = Object.values({ ...initObj })
+    const tails = ids.filter((id) => !parents.includes(id))
 
     let stack: string[] = []
     const lines: string[][] = []
     const branches: string[][] = []
     const circles: string[][] = []
 
-    tails.value.forEach((tail) => {
+    tails.forEach((tail) => {
       let curTail: string = tail
       stack.push(curTail)
 
       do {
         if (!stack.includes(curTail)) stack.push(curTail)
-        if (!stack.includes(initObj.value[curTail])) stack.push(initObj.value[curTail])
-        curTail = initObj.value[curTail]
+        if (!stack.includes(initObj[curTail])) stack.push(initObj[curTail])
+        curTail = initObj[curTail]
         let branch: string[] = []
         let circle: string[] = []
 
@@ -127,8 +123,8 @@ export const useAstroDataStore = defineStore('astroData', () => {
           circles.push(circle)
           break
         }
-        if (stack.includes(initObj.value[curTail])) {
-          const { lineArr, circleArr } = separateLineAndCircle(stack, initObj.value[curTail])
+        if (stack.includes(initObj[curTail])) {
+          const { lineArr, circleArr } = separateLineAndCircle(stack, initObj[curTail])
           branch = lineArr
           circle = circleArr
 
@@ -138,15 +134,13 @@ export const useAstroDataStore = defineStore('astroData', () => {
         if (circle.length > 0 && !isIncludedAlready) {
           circles.push(circle)
         }
-      } while (!stack.includes(initObj.value[curTail]))
+      } while (!stack.includes(initObj[curTail]))
 
       lines.push(stack)
       stack = []
     })
-    baseLevel.value = circles
-    baseLevelFlat.value = circles.flat()
-    allBranches.value = branches
-    return 'inside'
+
+    return { circles, branches }
   }
 
   const isItemExist = (circles: string[][], item: string) => {
@@ -168,17 +162,10 @@ export const useAstroDataStore = defineStore('astroData', () => {
   }
 
   return {
-    initObj,
-    initAstroDummyObj,
-    initAstroObjAll,
     initZodiacObj,
-    baseLevel,
-    allBranches,
-    convertedRes,
-    tails,
-    getDummyAstroData,
-    getAstroData,
-    getAstroFromZodiac,
-    getResIdsObj
+    initAstroObjAllGrades,
+    convertedResAllByGrades,
+    baseLevelAllByGrades,
+    getConvertedResultObj
   }
 })

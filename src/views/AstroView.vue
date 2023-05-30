@@ -5,21 +5,11 @@ import DataCard from '@/components/DataCard.vue'
 import { useAstroDataStore } from '@/stores/astroData'
 
 const astroDataStore = useAstroDataStore()
-const {
-  initObj,
-  convertedRes,
-  baseLevel,
-  allBranches,
-  initAstroDummyObj,
-  initZodiacObj,
-  initAstroObjAll
-} = storeToRefs(astroDataStore)
+const { initAstroObjAllGrades, convertedResAllByGrades, baseLevelAllByGrades } =
+  storeToRefs(astroDataStore)
 
 onMounted(() => {
-  astroDataStore.getDummyAstroData()
-  astroDataStore.getAstroFromZodiac()
-  astroDataStore.getAstroData()
-  astroDataStore.getResIdsObj()
+  astroDataStore.getConvertedResultObj()
 })
 </script>
 
@@ -30,19 +20,18 @@ onMounted(() => {
       <div>
         <h2 class="text-2xl font-medium text-teal-400 text-center">Initial Data</h2>
         <div class="flex-col space-y-4">
-          <DataCard title="Initial Astro (choosen)" :data="initObj" />
-          <DataCard title="Initial Astro (dummy)" :data="initAstroDummyObj" />
-          <DataCard title="Initial Zodiac All (initAstroObjAll)" :data="initAstroObjAll" />
-          <DataCard title="Initial Zodiac (initZodiacObj) " :data="initZodiacObj" />
+          <DataCard
+            title="Initial Zodiac All (initAstroObjAllGrades)"
+            :data="initAstroObjAllGrades"
+          />
         </div>
       </div>
       <div>
         <h2 class="text-2xl font-medium text-teal-400 text-center">Result Data</h2>
-        <DataCard title="Result Astro Data (convertedRes)" :data="convertedRes" />
+        <DataCard title="Result Astro Data (all grades)" :data="convertedResAllByGrades" />
         <div class="flex-col space-y-4">
           <hr class="w-full h-1 py-3 bg-teal-200 border-0 rounded dark:bg-gray-700" />
-          <DataCard title="BASE Level" :data="baseLevel" />
-          <DataCard title="All Branches" :data="allBranches" />
+          <DataCard title="BASE Level (all grades)" :data="baseLevelAllByGrades" />
         </div>
       </div>
     </div>

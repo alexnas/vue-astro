@@ -11,4 +11,6 @@ interface IConverted1 {
 
 type IConverted2 = { [key: string]: IConverted1 }
 
-export type { IPersonSet, IConverted1, IConverted2, IZodiacSet }
+type IInvertedObj = { [key: string]: string[] }
+
+export type { IPersonSet, IConverted1, IConverted2, IZodiacSet, IInvertedObj }
