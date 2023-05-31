@@ -1,13 +1,13 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { IConverted2, IPersonSet, IInvertedObj, IBaseLevel } from '../types'
+import type { IConvertedRes, IPersonSet, IInvertedObj, IBaseLevel } from '../types'
 import { dummyZodiac } from '@/data/dummyZodiacData'
 import zodiacPlanets from '@/constants/zodiacPlanets'
 
 export const useAstroDataStore = defineStore('astroData', () => {
   const initZodiacObj = ref<IPersonSet>({}) // Initial zodiac data to compute - from dummy Zodiac
   const initAstroObjAllGrades = ref<IPersonSet[]>([]) // Initial astro data from zodiac to compute - from dummy Zodiac
-  const convertedResAllByGrades = ref<IConverted2[]>([]) // Resulted object after all convertions
+  const convertedResAllByGrades = ref<IConvertedRes[]>([]) // Resulted object after all convertions
   const baseLevelAllGrades = ref<IBaseLevel[]>([]) // Base lavel ids all around
 
   const getZodiacData = () => {
@@ -47,9 +47,9 @@ export const useAstroDataStore = defineStore('astroData', () => {
     initObj: IPersonSet,
     invertedObj: IInvertedObj,
     branches: string[][]
-  ): IConverted2 => {
+  ): IConvertedRes => {
     const EmptyResObj = getEmptyResObj({ ...initObj })
-    const obj: IConverted2 = { ...EmptyResObj }
+    const obj: IConvertedRes = { ...EmptyResObj }
 
     branches.forEach((branch) => {
       for (let i = 0; i < branch.length; i++) {
@@ -66,8 +66,8 @@ export const useAstroDataStore = defineStore('astroData', () => {
     return obj
   }
 
-  const getEmptyResObj = (initialObj: IPersonSet): IConverted2 => {
-    const resObj = {} as IConverted2
+  const getEmptyResObj = (initialObj: IPersonSet): IConvertedRes => {
+    const resObj = {} as IConvertedRes
     Object.keys(initialObj).forEach((planet) => {
       const parent: string = initialObj[planet]
       resObj[planet] = { id: planet, parent, level: -1, children: [] }
