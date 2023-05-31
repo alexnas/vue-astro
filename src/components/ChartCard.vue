@@ -18,13 +18,14 @@ defineProps({
   }
 })
 </script>
+// class="overflow-x-auto"
 
 <template>
   <div
-    class="p-4 w-fit min-w-1/2 max-w-fit mx-auto bg-white rounded-xl shadow-lg flex items-center space-x-4"
+    class="flex flex-col p-4 my-6 mx-1 min-w-1/2 max-w-fit bg-white rounded-xl shadow-lg border-t-2 flex items-center space-x-2"
   >
-    <div>
-      <div class="mb-4 w-full text-xl font-medium text-black">{{ title }}</div>
+    <div class="mb-4 w-full text-xl font-medium text-black">{{ title }}</div>
+    <div class="overflow-x-auto w-full">
       <div
         class="p-3 mb-6 text-slate-500 rounded-xl border-t-2 border-l-8 border-l-teal-200"
         v-for="(planetGroup, idx) in baseLevel"
