@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { PropType } from 'vue'
+import type { IBaseLevel } from '../types'
 import ChartItem from './ChartItem.vue'
 
 defineProps({
@@ -10,9 +12,9 @@ defineProps({
     type: Object || Array,
     default: () => {}
   },
-  show: {
-    type: Object || Array,
-    default: () => {}
+  baseLevel: {
+    type: Array as PropType<IBaseLevel>,
+    default: () => []
   }
 })
 </script>
@@ -25,7 +27,7 @@ defineProps({
       <div class="mb-4 w-full text-xl font-medium text-black">{{ title }}</div>
       <div
         class="p-3 mb-6 text-slate-500 rounded-xl border-t-2 border-l-8 border-l-teal-200"
-        v-for="(planetGroup, idx) in show"
+        v-for="(planetGroup, idx) in baseLevel"
         :key="idx"
       >
         <div class="text-slate-500" v-for="planet in planetGroup" :key="planet">

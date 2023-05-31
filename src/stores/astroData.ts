@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { IConverted2, IPersonSet, IInvertedObj } from '../types'
+import type { IConverted2, IPersonSet, IInvertedObj, IBaseLevel } from '../types'
 import { dummyZodiac } from '@/data/dummyZodiacData'
 import zodiacPlanets from '@/constants/zodiacPlanets'
 
@@ -8,7 +8,7 @@ export const useAstroDataStore = defineStore('astroData', () => {
   const initZodiacObj = ref<IPersonSet>({}) // Initial zodiac data to compute - from dummy Zodiac
   const initAstroObjAllGrades = ref<IPersonSet[]>([]) // Initial astro data from zodiac to compute - from dummy Zodiac
   const convertedResAllByGrades = ref<IConverted2[]>([]) // Resulted object after all convertions
-  const baseLevelAllByGrades = ref<string[][][]>([]) // Base lavel ids all around
+  const baseLevelAllGrades = ref<IBaseLevel[]>([]) // Base lavel ids all around
 
   const getZodiacData = () => {
     initZodiacObj.value = { ...dummyZodiac }
@@ -39,7 +39,7 @@ export const useAstroDataStore = defineStore('astroData', () => {
       const invertedObj: IInvertedObj = inverseInitObj({ ...initObj }, baseLevelFlat)
       const convertedRes = getResIdsObj(initObj, invertedObj, branches)
       convertedResAllByGrades.value.push(convertedRes)
-      baseLevelAllByGrades.value.push(circles)
+      baseLevelAllGrades.value.push(circles)
     })
   }
 
@@ -165,7 +165,7 @@ export const useAstroDataStore = defineStore('astroData', () => {
     initZodiacObj,
     initAstroObjAllGrades,
     convertedResAllByGrades,
-    baseLevelAllByGrades,
+    baseLevelAllGrades,
     getConvertedResultObj
   }
 })
