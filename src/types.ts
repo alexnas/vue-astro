@@ -15,4 +15,22 @@ type IInvertedObj = { [key: string]: string[] }
 
 type IBaseLevel = string[][]
 
-export type { IPersonSet, IConverted, IConvertedRes, IZodiacSet, IInvertedObj, IBaseLevel }
+interface ISingleSet {
+  initZodiacObj: IPersonSet
+  initAstroObjAllGrades: IPersonSet[]
+  convertedResAllGrades: IConvertedRes[]
+  baseLevelAllGrades: IBaseLevel[]
+}
+
+type ICurrentAstroData = { [id: number]: ISingleSet }
+
+export type {
+  IPersonSet,
+  IConverted,
+  IConvertedRes,
+  IZodiacSet,
+  IInvertedObj,
+  IBaseLevel,
+  ISingleSet,
+  ICurrentAstroData
+}

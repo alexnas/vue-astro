@@ -1,46 +1,71 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { IConvertedRes, IPersonSet, IInvertedObj, IBaseLevel } from '../types'
-import { dummyZodiac } from '@/data/dummyZodiacData'
+import type {
+  IConvertedRes,
+  IPersonSet,
+  IInvertedObj,
+  IBaseLevel,
+  ISingleSet,
+  ICurrentAstroData
+} from '../types'
+import { dummyZodiac, dummyZodiac2 } from '@/data/dummyZodiacData'
 import zodiacPlanets from '@/constants/zodiacPlanets'
 
-export const useAstroDataStore = defineStore('astroData', () => {
-  const initZodiacObj = ref<IPersonSet>({}) // Initial zodiac data to compute - from dummy Zodiac
-  const initAstroObjAllGrades = ref<IPersonSet[]>([]) // Initial astro data from zodiac to compute - from dummy Zodiac
-  const convertedResAllGrades = ref<IConvertedRes[]>([]) // Resulted object after all convertions
-  const baseLevelAllGrades = ref<IBaseLevel[]>([]) // Base lavel ids all around
+const initCurrentAstroData: ICurrentAstroData = {
+  0: {
+    initZodiacObj: {},
+    initAstroObjAllGrades: [],
+    convertedResAllGrades: [],
+    baseLevelAllGrades: []
+  },
+  1: {
+    initZodiacObj: {},
+    initAstroObjAllGrades: [],
+    convertedResAllGrades: [],
+    baseLevelAllGrades: []
+  }
+}
 
-  const getZodiacData = () => {
-    initZodiacObj.value = { ...dummyZodiac }
+export const useAstroDataStore = defineStore('astroData', () => {
+  const currentDoubleAstroData = ref<ICurrentAstroData>({ ...initCurrentAstroData })
+
+  const getResultAstroData = (
+    zodiacData1: IPersonSet = { ...dummyZodiac },
+    zodiacData2: IPersonSet = { ...dummyZodiac2 }
+  ) => {
+    currentDoubleAstroData.value[0] = { ...getConvertedResultObj(zodiacData1) }
+    currentDoubleAstroData.value[1] = { ...getConvertedResultObj(zodiacData2) }
   }
 
-  const getAstroFromZodiac = () => {
+  const getAstroFromZodiac = (initZodiacObj: IPersonSet) => {
     const initAstroObjFirst: IPersonSet | null = {}
     const initAstroObjSecond: IPersonSet | null = {}
     const initAstroObjThird: IPersonSet | null = {}
-    Object.keys(initZodiacObj.value).forEach((id) => {
-      initAstroObjFirst[id] = zodiacPlanets[initZodiacObj.value[id]][0]
-      initAstroObjSecond[id] = zodiacPlanets[initZodiacObj.value[id]][1]
-      initAstroObjThird[id] = zodiacPlanets[initZodiacObj.value[id]][2]
+    Object.keys(initZodiacObj).forEach((id) => {
+      initAstroObjFirst[id] = zodiacPlanets[initZodiacObj[id]][0]
+      initAstroObjSecond[id] = zodiacPlanets[initZodiacObj[id]][1]
+      initAstroObjThird[id] = zodiacPlanets[initZodiacObj[id]][2]
     })
-    initAstroObjAllGrades.value = [initAstroObjFirst, initAstroObjSecond, initAstroObjThird]
-
-    return [initAstroObjFirst, initAstroObjSecond, initAstroObjThird]
+    const initAstroObjAllGrades = [initAstroObjFirst, initAstroObjSecond, initAstroObjThird]
+    return initAstroObjAllGrades
   }
 
-  const getConvertedResultObj = (): void => {
-    getZodiacData()
-    getAstroFromZodiac()
+  const getConvertedResultObj = (initZodiacObj: IPersonSet): ISingleSet => {
+    const initAstroObjAllGrades: IPersonSet[] = getAstroFromZodiac(initZodiacObj)
 
-    initAstroObjAllGrades.value.forEach((initObj) => {
+    const convertedResAllGrades: IConvertedRes[] = []
+    const baseLevelAllGrades: IBaseLevel[] = []
+
+    initAstroObjAllGrades.forEach((initObj) => {
       const { circles, branches } = getAstroData(initObj)
       const baseLevelFlat = circles.flat()
 
       const invertedObj: IInvertedObj = inverseInitObj({ ...initObj }, baseLevelFlat)
       const convertedRes = getResIdsObj(initObj, invertedObj, branches)
-      convertedResAllGrades.value.push(convertedRes)
-      baseLevelAllGrades.value.push(circles)
+      convertedResAllGrades.push(convertedRes)
+      baseLevelAllGrades.push(circles)
     })
+    return { initZodiacObj, initAstroObjAllGrades, convertedResAllGrades, baseLevelAllGrades }
   }
 
   const getResIdsObj = (
@@ -162,10 +187,7 @@ export const useAstroDataStore = defineStore('astroData', () => {
   }
 
   return {
-    initZodiacObj,
-    initAstroObjAllGrades,
-    convertedResAllGrades,
-    baseLevelAllGrades,
-    getConvertedResultObj
+    currentDoubleAstroData,
+    getResultAstroData
   }
 })
