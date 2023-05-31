@@ -5,7 +5,7 @@ import ChartCard from '@/components/ChartCard.vue'
 import { useAstroDataStore } from '@/stores/astroData'
 
 const astroDataStore = useAstroDataStore()
-const { convertedResAllByGrades, baseLevelAllByGrades } = storeToRefs(astroDataStore)
+const { convertedResAllGrades, baseLevelAllGrades } = storeToRefs(astroDataStore)
 
 onMounted(() => {
   astroDataStore.getConvertedResultObj()
@@ -18,18 +18,18 @@ onMounted(() => {
     <div class="px-4">
       <ChartCard
         title="Chart Stage 1"
-        :data="convertedResAllByGrades[0]"
-        :show="baseLevelAllByGrades[0]"
+        :data="convertedResAllGrades[0]"
+        :baseLevel="baseLevelAllGrades[0]"
       />
       <ChartCard
         title="Chart Stage 2"
-        :data="convertedResAllByGrades[1]"
-        :show="baseLevelAllByGrades[1]"
+        :data="convertedResAllGrades[1]"
+        :baseLevel="baseLevelAllGrades[1]"
       />
       <ChartCard
         title="Chart Stage 3"
-        :data="convertedResAllByGrades[2]"
-        :show="baseLevelAllByGrades[2]"
+        :data="convertedResAllGrades[2]"
+        :baseLevel="baseLevelAllGrades[2]"
       />
     </div>
   </main>

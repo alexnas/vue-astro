@@ -5,7 +5,7 @@ import DataCard from '@/components/DataCard.vue'
 import { useAstroDataStore } from '@/stores/astroData'
 
 const astroDataStore = useAstroDataStore()
-const { initAstroObjAllGrades, convertedResAllByGrades, baseLevelAllByGrades } =
+const { initAstroObjAllGrades, convertedResAllGrades, baseLevelAllGrades } =
   storeToRefs(astroDataStore)
 
 onMounted(() => {
@@ -28,10 +28,10 @@ onMounted(() => {
       </div>
       <div>
         <h2 class="text-2xl font-medium text-teal-400 text-center">Result Data</h2>
-        <DataCard title="Result Astro Data (all grades)" :data="convertedResAllByGrades" />
+        <DataCard title="Result Astro Data (all grades)" :data="convertedResAllGrades" />
         <div class="flex-col space-y-4">
           <hr class="w-full h-1 py-3 bg-teal-200 border-0 rounded dark:bg-gray-700" />
-          <DataCard title="BASE Level (all grades)" :data="baseLevelAllByGrades" />
+          <DataCard title="BASE Level (all grades)" :data="baseLevelAllGrades" />
         </div>
       </div>
     </div>

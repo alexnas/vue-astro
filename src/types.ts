@@ -2,15 +2,17 @@ type IZodiacSet = { [key: string]: string[] }
 
 type IPersonSet = { [key: string]: string }
 
-interface IConverted1 {
+interface IConverted {
   id: string
   parent: string
   level: number
   children: string[]
 }
 
-type IConverted2 = { [key: string]: IConverted1 }
+type IConvertedRes = { [key: string]: IConverted }
 
 type IInvertedObj = { [key: string]: string[] }
 
-export type { IPersonSet, IConverted1, IConverted2, IZodiacSet, IInvertedObj }
+type IBaseLevel = string[][]
+
+export type { IPersonSet, IConverted, IConvertedRes, IZodiacSet, IInvertedObj, IBaseLevel }
