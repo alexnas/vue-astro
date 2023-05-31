@@ -7,7 +7,7 @@ import zodiacPlanets from '@/constants/zodiacPlanets'
 export const useAstroDataStore = defineStore('astroData', () => {
   const initZodiacObj = ref<IPersonSet>({}) // Initial zodiac data to compute - from dummy Zodiac
   const initAstroObjAllGrades = ref<IPersonSet[]>([]) // Initial astro data from zodiac to compute - from dummy Zodiac
-  const convertedResAllByGrades = ref<IConvertedRes[]>([]) // Resulted object after all convertions
+  const convertedResAllGrades = ref<IConvertedRes[]>([]) // Resulted object after all convertions
   const baseLevelAllGrades = ref<IBaseLevel[]>([]) // Base lavel ids all around
 
   const getZodiacData = () => {
@@ -38,7 +38,7 @@ export const useAstroDataStore = defineStore('astroData', () => {
 
       const invertedObj: IInvertedObj = inverseInitObj({ ...initObj }, baseLevelFlat)
       const convertedRes = getResIdsObj(initObj, invertedObj, branches)
-      convertedResAllByGrades.value.push(convertedRes)
+      convertedResAllGrades.value.push(convertedRes)
       baseLevelAllGrades.value.push(circles)
     })
   }
@@ -164,7 +164,7 @@ export const useAstroDataStore = defineStore('astroData', () => {
   return {
     initZodiacObj,
     initAstroObjAllGrades,
-    convertedResAllByGrades,
+    convertedResAllGrades,
     baseLevelAllGrades,
     getConvertedResultObj
   }
