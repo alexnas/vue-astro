@@ -1,17 +1,19 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
 import type { IPerson } from '@/types'
-import type { PropType } from 'vue'
+import { usePersonStore } from '@/stores/person'
 
-defineProps({
-  persons: {
-    type: Array as PropType<IPerson[]>,
-    default: () => []
-  }
-})
+const personStore = usePersonStore()
+const { persons } = storeToRefs(personStore)
 
 const handleViewClick = (person: IPerson) => {}
 const handleEditClick = (person: IPerson) => {}
 const handleDeleteClick = (person: IPerson) => {}
+
+onMounted(() => {
+  personStore.getPersons()
+})
 </script>
 
 <template>
