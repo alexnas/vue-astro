@@ -24,6 +24,18 @@ interface ISingleSet {
 
 type ICurrentAstroData = { [id: number]: ISingleSet }
 
+interface IPerson {
+  id?: number
+  name: string
+  surname: string
+  birthday: string
+  timezone: string
+  birthplace: string
+  description: string
+  createdAt?: string
+  updatedAt?: string
+}
+
 export type {
   IPersonSet,
   IConverted,
@@ -32,5 +44,6 @@ export type {
   IInvertedObj,
   IBaseLevel,
   ISingleSet,
-  ICurrentAstroData
+  ICurrentAstroData,
+  IPerson
 }
