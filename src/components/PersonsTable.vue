@@ -3,12 +3,19 @@ import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import type { IPerson } from '@/types'
 import { usePersonStore } from '@/stores/person'
+import { useModalStore } from '@/stores/modal'
+import { formatDateTime } from '@/tools/formatDate'
+import PersonForm from '@/components/PersonForm.vue'
 
 const personStore = usePersonStore()
 const { persons, currentPerson, currentPersonZodiac } = storeToRefs(personStore)
+const modalStore = useModalStore()
 
 const handleViewClick = (person: IPerson) => {
   personStore.getPersonById(person.id)
+  // personStore.setPreEditedPerson(person)
+  // personStore.setCurrentPerson(person)
+  modalStore.openViewItemModal()
 }
 const handleEditClick = (person: IPerson) => {}
 const handleDeleteClick = (person: IPerson) => {}
@@ -19,22 +26,20 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="currentPersonZodiac"></div>
-  <pre>{{ currentPersonZodiac }}</pre>
   <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-full text-base text-left text-gray-500 dark:text-gray-400 bg-gray-50">
+    <table class="w-full mb-12 text-base text-left text-gray-500 dark:text-gray-400 bg-gray-50">
       <thead
         class="text-sm text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400 sticky top-0"
       >
         <tr>
           <th scope="col" class="px-4 py-3">#</th>
           <th scope="col" class="px-4 py-3">ID</th>
-          <th scope="col" class="px-4 py-3">name</th>
-          <th scope="col" class="px-4 py-3">surname</th>
-          <th scope="col" class="px-4 py-3">birthday</th>
-          <th scope="col" class="px-4 py-3">timezone</th>
-          <th scope="col" class="px-4 py-3">birthplace</th>
-          <th scope="col" class="px-4 py-3">description</th>
+          <th scope="col" class="px-4 py-3">Name</th>
+          <th scope="col" class="px-4 py-3">Surname</th>
+          <th scope="col" class="px-4 py-3">Birthday</th>
+          <th scope="col" class="px-4 py-3">Timezone</th>
+          <th scope="col" class="px-4 py-3">Birthplace</th>
+          <th scope="col" class="px-4 py-3">Description</th>
           <th scope="col" class="px-4 py-3">Created</th>
           <th scope="col" class="px-4 py-3">Updated</th>
           <th scope="col" class="px-4 py-3">Action</th>
@@ -54,8 +59,8 @@ onMounted(() => {
           <td class="px-4 py-3">{{ person.timezone }}</td>
           <td class="px-4 py-3">{{ person.birthplace }}</td>
           <td class="px-4 py-3">{{ person.description }}</td>
-          <td class="px-4 py-3">{{ person.createdAt }}</td>
-          <td class="px-4 py-3">{{ person.updatedAt }}</td>
+          <td class="px-4 py-3">{{ formatDateTime(person.createdAt) }}</td>
+          <td class="px-4 py-3">{{ formatDateTime(person.updatedAt) }}</td>
           <td class="px-4 py-3 flex">
             <button
               @click.stop="handleViewClick(person)"
@@ -83,4 +88,7 @@ onMounted(() => {
       </tbody>
     </table>
   </div>
+
+  <!-- Person Modal Form -->
+  <PersonForm />
 </template>
