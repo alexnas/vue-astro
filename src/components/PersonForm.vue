@@ -18,26 +18,26 @@ const modalTitle = computed(() => {
 })
 
 const closeModal = () => {
-  // currentPerson.resetCurrentPerson()
+  personStore.resetCurrentPerson()
   modalStore.resetModalState()
 }
 
 const resetModalForm = () => {
-  // currentPerson.resetPreEditedPerson()
+  personStore.resetPreEditedPerson()
 }
 
 const handleEditClick = () => {
-  // personStore.setCurrentPerson(currentPerson.value)
+  personStore.setCurrentPerson(currentPerson.value)
   modalStore.openEditItemModal()
 }
 
 const handleSubmit = async () => {
   if (isNewItem.value) {
-    // await personStore.createPerson(currentPerson.value)
+    await personStore.createPerson(currentPerson.value)
   } else {
-    // await personStore.updatePerson(currentPerson.value)
+    await personStore.updatePerson(currentPerson.value)
   }
-  // personStore.resetCurrentPerson()
+  personStore.resetCurrentPerson()
   modalStore.resetModalState()
 }
 </script>

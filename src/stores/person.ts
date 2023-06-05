@@ -39,9 +39,34 @@ const initZodiac: IZodiac = {
 export const usePersonStore = defineStore('person', () => {
   const persons = ref<IPerson[]>([])
   const currentPerson = ref<IPerson>({ ...initPerson })
+  const preEditedPerson = ref<IPerson>({ ...initPerson })
   const currentPersonZodiac = ref<IZodiac>({ ...initZodiac })
   const loading = ref<boolean>(false)
   const error = ref<string | null>(null)
+
+  const resetCurrentPerson = () => {
+    preEditedPerson.value = { ...initPerson }
+    currentPerson.value = { ...initPerson }
+    return currentPerson.value
+  }
+
+  const setCurrentPerson = (person: IPerson) => {
+    currentPerson.value = { ...person }
+    return currentPerson.value
+  }
+
+  const cancelPreEditedPerson = () => {
+    preEditedPerson.value = { ...initPerson }
+  }
+
+  const resetPreEditedPerson = () => {
+    currentPerson.value = { ...preEditedPerson.value }
+  }
+
+  const setPreEditedPerson = (person: IPerson) => {
+    preEditedPerson.value = { ...person }
+    return preEditedPerson.value
+  }
 
   const getPersons = async () => {
     try {
@@ -105,14 +130,108 @@ export const usePersonStore = defineStore('person', () => {
     }
   }
 
+  const createPerson = async (personItem: IPerson) => {
+    const idx = persons.value.findIndex(
+      (item) => item.name === personItem.name && item.surname === personItem.surname
+    )
+    if (idx >= 0) {
+      console.log(`Error: There is already such person instance with name=${personItem.name}`)
+      throw Error(
+        `There is already such person instance with name=${personItem.name} and surname=${personItem.surname} `
+      )
+    }
+
+    const params = { ...personItem }
+
+    try {
+      loading.value = true
+      const { data } = await axios.post(personApi, params)
+      persons.value.push(data)
+      loading.value = false
+      error.value = null
+    } catch (err: any) {
+      loading.value = false
+      if (axios.isAxiosError(error)) {
+        error.value = err.message
+        console.log('Error', err.message)
+      } else {
+        error.value = 'Unexpected error encountered'
+        console.log('Error', err)
+      }
+    }
+  }
+
+  const updatePerson = async (personItem: IPerson) => {
+    const id = personItem.id
+    const idx = persons.value.findIndex((item) => item.id === id)
+    if (idx === -1) {
+      console.log(`Error: There is no such person instance with id=${id}`)
+      throw Error(`There is no such person instance with id=${id}`)
+    }
+
+    const params = { ...personItem }
+
+    try {
+      loading.value = true
+      const { data } = await axios.post(personApi, params)
+      persons.value.push(data)
+      loading.value = false
+      error.value = null
+    } catch (err: any) {
+      loading.value = false
+      if (axios.isAxiosError(error)) {
+        error.value = err.message
+        console.log('Error', err.message)
+      } else {
+        error.value = 'Unexpected error encountered'
+        console.log('Error', err)
+      }
+    }
+  }
+
+  const deletePerson = async (personItem: IPerson) => {
+    const id = personItem.id
+    const idx = persons.value.findIndex((item) => item.id === id)
+    if (idx === -1) {
+      console.log(`Error: There is no such person instance with id=${id}`)
+      throw Error(`There is no such person instance with id=${id}`)
+    }
+
+    try {
+      loading.value = true
+      await axios.delete(`${personApi}/${id}`)
+      persons.value = persons.value.filter((item) => item.id !== id)
+      loading.value = false
+      error.value = null
+    } catch (err: any) {
+      loading.value = false
+      if (axios.isAxiosError(error)) {
+        error.value = err.message
+        console.log('Error', err.message)
+      } else {
+        error.value = 'Unexpected error encountered'
+        console.log('Error', err)
+      }
+    }
+  }
+
   return {
     persons,
     currentPerson,
+    preEditedPerson,
     currentPersonZodiac,
     loading,
     error,
     getPersons,
     getPersonById,
-    getZodiacByPersonId
+    getZodiacByPersonId,
+    resetCurrentPerson,
+    setCurrentPerson,
+    cancelPreEditedPerson,
+    resetPreEditedPerson,
+    setPreEditedPerson,
+    createPerson,
+    updatePerson,
+    deletePerson
   }
 })
