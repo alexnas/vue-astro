@@ -25,15 +25,33 @@ interface ISingleSet {
 type ICurrentAstroData = { [id: number]: ISingleSet }
 
 interface IPerson {
-  id?: number
+  id: number
   name: string
   surname: string
   birthday: string
   timezone: string
   birthplace: string
   description: string
-  createdAt?: string
-  updatedAt?: string
+  createdAt: string
+  updatedAt: string
+}
+
+interface IZodiac {
+  id: number
+  sun: string
+  moon: string
+  mercury: string
+  venus: string
+  mars: string
+  jupiter: string
+  saturn: string
+  uranus: string
+  neptune: string
+  pluto: string
+  retro: string[]
+  description: string
+  createdAt: string
+  updatedAt: string
 }
 
 export type {
@@ -45,5 +63,6 @@ export type {
   IBaseLevel,
   ISingleSet,
   ICurrentAstroData,
-  IPerson
+  IPerson,
+  IZodiac
 }
