@@ -52,6 +52,7 @@ interface IZodiac {
   description: string
   createdAt: string
   updatedAt: string
+  personId: number
 }
 
 export type {
