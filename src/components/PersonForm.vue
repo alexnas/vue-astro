@@ -2,13 +2,16 @@
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { usePersonStore } from '@/stores/person'
+import { useZodiacStore } from '@/stores/zodiac'
 import { useModalStore } from '@/stores/modal'
 import { formatDateTime } from '@/tools/formatDate'
 import BaseModal from '@/components/BaseModal.vue'
 import { zodiacSymbols } from '@/constants/zodiacSymbols'
 
 const personStore = usePersonStore()
-const { currentPerson, currentPersonZodiac } = storeToRefs(personStore)
+const { currentPerson } = storeToRefs(personStore)
+const zodiacStore = useZodiacStore()
+const { currentPersonZodiac } = storeToRefs(zodiacStore)
 const modalStore = useModalStore()
 const { isNewItem, isViewItem } = storeToRefs(modalStore)
 
