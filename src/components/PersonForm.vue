@@ -2,12 +2,16 @@
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { usePersonStore } from '@/stores/person'
+import { useZodiacStore } from '@/stores/zodiac'
 import { useModalStore } from '@/stores/modal'
 import { formatDateTime } from '@/tools/formatDate'
 import BaseModal from '@/components/BaseModal.vue'
+import { zodiacSymbols } from '@/constants/zodiacSymbols'
 
 const personStore = usePersonStore()
 const { currentPerson } = storeToRefs(personStore)
+const zodiacStore = useZodiacStore()
+const { currentPersonZodiac } = storeToRefs(zodiacStore)
 const modalStore = useModalStore()
 const { isNewItem, isViewItem } = storeToRefs(modalStore)
 
@@ -33,9 +37,9 @@ const handleEditClick = () => {
 
 const handleSubmit = async () => {
   if (isNewItem.value) {
-    await personStore.createPerson(currentPerson.value)
+    await personStore.createPerson()
   } else {
-    await personStore.updatePerson(currentPerson.value)
+    await personStore.updatePerson()
   }
   personStore.resetCurrentPerson()
   modalStore.resetModalState()
@@ -47,7 +51,11 @@ const handleSubmit = async () => {
     <form
       class="relative py-4 px-5 my-8 md:px-10 bg-gray-50 border border-gray-200 shadow-md rounded"
     >
-      <div class="grid grid-cols-2 gap-4">
+      <div class="mb-2 text-xl text-center bg-teal-200 border-0 rounded">
+        Person Info (id:{{ currentPerson.id }})
+      </div>
+
+      <div class="grid lg:grid-cols-4 grid-cols-3 gap-4">
         <div>
           <label
             class="text-gray-500 pl-3 text-sm uppercase font-bold leading-tight tracking-normal"
@@ -69,7 +77,7 @@ const handleSubmit = async () => {
             >Surname</label
           >
           <input
-            name="suname"
+            name="surname"
             type="text"
             v-model="currentPerson.surname"
             :disabled="isViewItem"
@@ -111,7 +119,7 @@ const handleSubmit = async () => {
         <div>
           <label
             class="text-gray-500 pl-3 text-sm uppercase font-bold leading-tight tracking-normal"
-            >Birth place</label
+            >Birthplace</label
           >
           <input
             name="birthplace"
@@ -130,11 +138,11 @@ const handleSubmit = async () => {
           >
           <input
             name="description"
-            as="textarea"
+            type="text"
             v-model="currentPerson.description"
             :disabled="isViewItem"
-            class="mt-1 pt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
-            placeholder="Person description"
+            class="mt-1 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+            placeholder="Person surname"
           />
         </div>
 
@@ -166,6 +174,233 @@ const handleSubmit = async () => {
           />
         </div>
       </div>
+
+      <div class="mt-6 mb-2 text-xl text-center bg-teal-200 border-0 rounded">
+        Zodiac (id:{{ currentPersonZodiac.id }})
+      </div>
+
+      <div class="grid grid-cols-3 gap-4">
+        <div>
+          <label class="block pl-3 text-sm capitalize font-bold text-gray-500">
+            <span class="text-base font-bold text-teal-400 hover:text-teal-500">&#9737;&nbsp;</span
+            >Sun</label
+          >
+          <div class="flex mt-1">
+            <span
+              class="inline-flex items-center px-3 text-xl font-bold text-teal-400 hover:text-teal-500 bg-gray-100 hover:bg-gray-50 border border-r-0 border-gray-300 rounded-l-md"
+            >
+              {{ zodiacSymbols[`${currentPersonZodiac.sun}`] }}
+            </span>
+            <input
+              type="text"
+              name="sun"
+              v-model="currentPersonZodiac.sun"
+              :disabled="isViewItem"
+              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+              placeholder="Pluto zodiac"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block pl-3 text-sm capitalize font-bold text-gray-500">
+            <span class="text-base font-bold text-teal-400 hover:text-teal-500">&#9789;&nbsp;</span
+            >Moon</label
+          >
+          <div class="flex mt-1">
+            <span
+              class="inline-flex items-center px-3 text-xl font-bold text-teal-400 hover:text-teal-500 bg-gray-100 hover:bg-gray-50 border border-r-0 border-gray-300 rounded-l-md"
+            >
+              {{ zodiacSymbols[`${currentPersonZodiac.moon}`] }}
+            </span>
+            <input
+              type="text"
+              name="moon"
+              v-model="currentPersonZodiac.moon"
+              :disabled="isViewItem"
+              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+              placeholder="Pluto zodiac"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block pl-3 text-sm capitalize font-bold text-gray-500">
+            <span class="text-base font-bold text-teal-400 hover:text-teal-500">&#9791;&nbsp;</span
+            >Mercury</label
+          >
+          <div class="flex mt-1">
+            <span
+              class="inline-flex items-center px-3 text-xl font-bold text-teal-400 hover:text-teal-500 bg-gray-100 hover:bg-gray-50 border border-r-0 border-gray-300 rounded-l-md"
+            >
+              {{ zodiacSymbols[`${currentPersonZodiac.mercury}`] }}
+            </span>
+            <input
+              type="text"
+              name="mercury"
+              v-model="currentPersonZodiac.mercury"
+              :disabled="isViewItem"
+              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+              placeholder="Pluto zodiac"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block pl-3 text-sm capitalize font-bold text-gray-500">
+            <span class="text-base font-bold text-teal-400 hover:text-teal-500">&#x2640;&nbsp;</span
+            >Venus</label
+          >
+          <div class="flex mt-1">
+            <span
+              class="inline-flex items-center px-3 text-xl font-bold text-teal-400 hover:text-teal-500 bg-gray-100 hover:bg-gray-50 border border-r-0 border-gray-300 rounded-l-md"
+            >
+              {{ zodiacSymbols[`${currentPersonZodiac.venus}`] }}
+            </span>
+            <input
+              type="text"
+              name="venus"
+              v-model="currentPersonZodiac.venus"
+              :disabled="isViewItem"
+              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+              placeholder="Pluto zodiac"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block pl-3 text-sm capitalize font-bold text-gray-500">
+            <span class="text-base font-bold text-teal-400 hover:text-teal-500">&#9794;&nbsp;</span
+            >Mars</label
+          >
+          <div class="flex mt-1">
+            <span
+              class="inline-flex items-center px-3 text-xl font-bold text-teal-400 hover:text-teal-500 bg-gray-100 hover:bg-gray-50 border border-r-0 border-gray-300 rounded-l-md"
+            >
+              {{ zodiacSymbols[`${currentPersonZodiac.mars}`] }}
+            </span>
+            <input
+              type="text"
+              name="mars"
+              v-model="currentPersonZodiac.mars"
+              :disabled="isViewItem"
+              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+              placeholder="Pluto zodiac"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block pl-3 text-sm capitalize font-bold text-gray-500">
+            <span class="text-base font-bold text-teal-400 hover:text-teal-500">&#9795;&nbsp;</span
+            >Jupiter</label
+          >
+          <div class="flex mt-1">
+            <span
+              class="inline-flex items-center px-3 text-xl font-bold text-teal-400 hover:text-teal-500 bg-gray-100 hover:bg-gray-50 border border-r-0 border-gray-300 rounded-l-md"
+            >
+              {{ zodiacSymbols[`${currentPersonZodiac.jupiter}`] }}
+            </span>
+            <input
+              type="text"
+              name="jupiter"
+              v-model="currentPersonZodiac.jupiter"
+              :disabled="isViewItem"
+              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+              placeholder="Pluto zodiac"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block pl-3 text-sm capitalize font-bold text-gray-500">
+            <span class="text-base font-bold text-teal-400 hover:text-teal-500">&#9796;&nbsp;</span
+            >Saturn</label
+          >
+          <div class="flex mt-1">
+            <span
+              class="inline-flex items-center px-3 text-xl font-bold text-teal-400 hover:text-teal-500 bg-gray-100 hover:bg-gray-50 border border-r-0 border-gray-300 rounded-l-md"
+            >
+              {{ zodiacSymbols[`${currentPersonZodiac.saturn}`] }}
+            </span>
+            <input
+              type="text"
+              name="saturn"
+              v-model="currentPersonZodiac.saturn"
+              :disabled="isViewItem"
+              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+              placeholder="Pluto zodiac"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block pl-3 text-sm capitalize font-bold text-gray-500">
+            <span class="text-base font-bold text-teal-400 hover:text-teal-500">&#9797;&nbsp;</span
+            >Uranus</label
+          >
+          <div class="flex mt-1">
+            <span
+              class="inline-flex items-center px-3 text-xl font-bold text-teal-400 hover:text-teal-500 bg-gray-100 hover:bg-gray-50 border border-r-0 border-gray-300 rounded-l-md"
+            >
+              {{ zodiacSymbols[`${currentPersonZodiac.uranus}`] }}
+            </span>
+            <input
+              type="text"
+              name="uranus"
+              v-model="currentPersonZodiac.uranus"
+              :disabled="isViewItem"
+              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+              placeholder="Pluto zodiac"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block pl-3 text-sm capitalize font-bold text-gray-500">
+            <span class="text-base font-bold text-teal-400 hover:text-teal-500">&#9798;&nbsp;</span
+            >Neptune</label
+          >
+          <div class="flex mt-1">
+            <span
+              class="inline-flex items-center px-3 text-xl font-bold text-teal-400 hover:text-teal-500 bg-gray-100 hover:bg-gray-50 border border-r-0 border-gray-300 rounded-l-md"
+            >
+              {{ zodiacSymbols[`${currentPersonZodiac.neptune}`] }}
+            </span>
+            <input
+              type="text"
+              name="neptune"
+              v-model="currentPersonZodiac.neptune"
+              :disabled="isViewItem"
+              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+              placeholder="Pluto zodiac"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block pl-3 text-sm capitalize font-bold text-gray-500">
+            <span class="text-base font-bold text-teal-400 hover:text-teal-500">&#9799;&nbsp;</span
+            >pluto</label
+          >
+          <div class="flex mt-1">
+            <span
+              class="inline-flex items-center px-3 text-xl font-bold text-teal-400 hover:text-teal-500 bg-gray-100 hover:bg-gray-50 border border-r-0 border-gray-300 rounded-l-md"
+            >
+              {{ zodiacSymbols[`${currentPersonZodiac.pluto}`] }}
+            </span>
+            <input
+              type="text"
+              name="pluto"
+              v-model="currentPersonZodiac.pluto"
+              :disabled="isViewItem"
+              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+              placeholder="Pluto zodiac"
+            />
+          </div>
+        </div>
+      </div>
+
       <div class="flex items-center justify-start w-full mt-8">
         <button
           @click.prevent="handleEditClick"

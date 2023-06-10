@@ -1,11 +1,11 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import type { IPerson, IZodiac } from '@/types'
-import { API_BASE_URL, PERSON_ENDPOINT, ZODIAC_ENDPOINT } from '@/constants/apiConstants'
+import { useZodiacStore } from '@/stores/zodiac'
+import type { IPerson } from '@/types'
+import { API_BASE_URL, PERSON_ENDPOINT } from '@/constants/apiConstants'
 
 const personApi = `${API_BASE_URL}${PERSON_ENDPOINT}`
-const zodiacApi = `${API_BASE_URL}${ZODIAC_ENDPOINT}`
 
 const initPerson: IPerson = {
   id: -1,
@@ -18,31 +18,15 @@ const initPerson: IPerson = {
   createdAt: '',
   updatedAt: ''
 }
-const initZodiac: IZodiac = {
-  id: -1,
-  sun: '',
-  moon: '',
-  mercury: '',
-  venus: '',
-  mars: '',
-  jupiter: '',
-  saturn: '',
-  uranus: '',
-  neptune: '',
-  pluto: '',
-  retro: [],
-  description: '',
-  createdAt: '',
-  updatedAt: ''
-}
 
 export const usePersonStore = defineStore('person', () => {
   const persons = ref<IPerson[]>([])
   const currentPerson = ref<IPerson>({ ...initPerson })
   const preEditedPerson = ref<IPerson>({ ...initPerson })
-  const currentPersonZodiac = ref<IZodiac>({ ...initZodiac })
   const loading = ref<boolean>(false)
   const error = ref<string | null>(null)
+
+  const zodiacStore = useZodiacStore()
 
   const resetCurrentPerson = () => {
     preEditedPerson.value = { ...initPerson }
@@ -94,7 +78,7 @@ export const usePersonStore = defineStore('person', () => {
       currentPerson.value = data
       loading.value = false
       error.value = null
-      getZodiacByPersonId(id)
+      zodiacStore.getZodiacByPersonId(id)
     } catch (err: any) {
       loading.value = false
       if (axios.isAxiosError(error)) {
@@ -109,28 +93,8 @@ export const usePersonStore = defineStore('person', () => {
     }
   }
 
-  const getZodiacByPersonId = async (id: number) => {
-    try {
-      loading.value = true
-      const { data } = await axios.get(`${zodiacApi}/${id}`)
-      currentPersonZodiac.value = data
-      loading.value = false
-      error.value = null
-    } catch (err: any) {
-      loading.value = false
-      if (axios.isAxiosError(error)) {
-        error.value = err.message
-        console.log('Error', err.message)
-        currentPersonZodiac.value = { ...initZodiac }
-      } else {
-        error.value = 'Unexpected error encountered'
-        console.log('Error', err)
-        currentPersonZodiac.value = { ...initZodiac }
-      }
-    }
-  }
-
-  const createPerson = async (personItem: IPerson) => {
+  const createPerson = async () => {
+    const personItem = { ...currentPerson.value }
     const idx = persons.value.findIndex(
       (item) => item.name === personItem.name && item.surname === personItem.surname
     )
@@ -147,6 +111,11 @@ export const usePersonStore = defineStore('person', () => {
       loading.value = true
       const { data } = await axios.post(personApi, params)
       persons.value.push(data)
+
+      if (data && data.id && data.id > 0) {
+        zodiacStore.createPersonZodiac(data.id)
+      }
+
       loading.value = false
       error.value = null
     } catch (err: any) {
@@ -161,7 +130,8 @@ export const usePersonStore = defineStore('person', () => {
     }
   }
 
-  const updatePerson = async (personItem: IPerson) => {
+  const updatePerson = async () => {
+    const personItem = { ...currentPerson.value }
     const id = personItem.id
     const idx = persons.value.findIndex((item) => item.id === id)
     if (idx === -1) {
@@ -173,8 +143,13 @@ export const usePersonStore = defineStore('person', () => {
 
     try {
       loading.value = true
-      const { data } = await axios.post(personApi, params)
-      persons.value.push(data)
+      const { data } = await axios.put(`${personApi}/${id}`, params)
+      persons.value[idx] = data
+
+      if (data && data.id && data.id > 0) {
+        zodiacStore.updatePersonZodiac(data.id)
+      }
+
       loading.value = false
       error.value = null
     } catch (err: any) {
@@ -219,12 +194,10 @@ export const usePersonStore = defineStore('person', () => {
     persons,
     currentPerson,
     preEditedPerson,
-    currentPersonZodiac,
     loading,
     error,
     getPersons,
     getPersonById,
-    getZodiacByPersonId,
     resetCurrentPerson,
     setCurrentPerson,
     cancelPreEditedPerson,
