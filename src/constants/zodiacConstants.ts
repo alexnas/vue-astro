@@ -10,3 +10,17 @@ export const SAGITTARIUS = 'sagittarius';
 export const CAPRICORN = 'capricorn';
 export const AQUARIUS = 'aquarius';
 export const PISCES = 'pisces';
+
+
+export const zodiacItems: string[] = ['aries',
+'taurus',
+'gemini',
+'cancer',
+'leo',
+'virgo',
+'libra',
+'scorpio',
+'sagittarius',
+'capricorn',
+'aquarius',
+'pisces',]

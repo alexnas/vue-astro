@@ -4,16 +4,19 @@ import { storeToRefs } from 'pinia'
 import { Icon } from '@iconify/vue'
 import type { IPerson } from '@/types'
 import { usePersonStore } from '@/stores/person'
+import { useZodiacStore } from '@/stores/zodiac'
 import { useModalStore } from '@/stores/modal'
 import { formatDateTime } from '@/tools/formatDate'
 import PersonForm from '@/components/PersonForm.vue'
 
 const personStore = usePersonStore()
 const { persons } = storeToRefs(personStore)
+const zodiacStore = useZodiacStore()
 const modalStore = useModalStore()
 
 const handleAddNewClick = () => {
   personStore.cancelPreEditedPerson()
+  zodiacStore.cancelZodiac()
   modalStore.openNewItemModal()
 }
 

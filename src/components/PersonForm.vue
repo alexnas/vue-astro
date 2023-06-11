@@ -7,6 +7,7 @@ import { useModalStore } from '@/stores/modal'
 import { formatDateTime } from '@/tools/formatDate'
 import BaseModal from '@/components/BaseModal.vue'
 import { zodiacSymbols } from '@/constants/zodiacSymbols'
+import { zodiacItems } from '@/constants/zodiacConstants'
 
 const personStore = usePersonStore()
 const { currentPerson } = storeToRefs(personStore)
@@ -194,14 +195,22 @@ const handleSubmit = async () => {
             >
               {{ zodiacSymbols[`${currentPersonZodiac.sun}`] }}
             </span>
-            <input
-              type="text"
+            <select
               name="sun"
               v-model="currentPersonZodiac.sun"
               :disabled="isViewItem"
-              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
-              placeholder="Pluto zodiac"
-            />
+              class="bg-gray-50 rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+            >
+              <option value="-1" disabled selected>- Select option -</option>
+              <option
+                class="bg-gray-50"
+                v-for="option in zodiacItems"
+                :value="option"
+                :key="option"
+              >
+                {{ option }}
+              </option>
+            </select>
           </div>
         </div>
 
@@ -216,14 +225,22 @@ const handleSubmit = async () => {
             >
               {{ zodiacSymbols[`${currentPersonZodiac.moon}`] }}
             </span>
-            <input
-              type="text"
+            <select
               name="moon"
               v-model="currentPersonZodiac.moon"
               :disabled="isViewItem"
-              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
-              placeholder="Pluto zodiac"
-            />
+              class="bg-gray-50 rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+            >
+              <option value="-1" disabled selected>- Select option -</option>
+              <option
+                class="bg-gray-50"
+                v-for="option in zodiacItems"
+                :value="option"
+                :key="option"
+              >
+                {{ option }}
+              </option>
+            </select>
           </div>
         </div>
 
@@ -238,14 +255,22 @@ const handleSubmit = async () => {
             >
               {{ zodiacSymbols[`${currentPersonZodiac.mercury}`] }}
             </span>
-            <input
-              type="text"
+            <select
               name="mercury"
               v-model="currentPersonZodiac.mercury"
               :disabled="isViewItem"
-              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
-              placeholder="Pluto zodiac"
-            />
+              class="bg-gray-50 rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+            >
+              <option value="-1" disabled selected>- Select option -</option>
+              <option
+                class="bg-gray-50"
+                v-for="option in zodiacItems"
+                :value="option"
+                :key="option"
+              >
+                {{ option }}
+              </option>
+            </select>
           </div>
         </div>
 
@@ -260,14 +285,22 @@ const handleSubmit = async () => {
             >
               {{ zodiacSymbols[`${currentPersonZodiac.venus}`] }}
             </span>
-            <input
-              type="text"
+            <select
               name="venus"
               v-model="currentPersonZodiac.venus"
               :disabled="isViewItem"
-              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
-              placeholder="Pluto zodiac"
-            />
+              class="bg-gray-50 rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+            >
+              <option value="-1" disabled selected>- Select option -</option>
+              <option
+                class="bg-gray-50"
+                v-for="option in zodiacItems"
+                :value="option"
+                :key="option"
+              >
+                {{ option }}
+              </option>
+            </select>
           </div>
         </div>
 
@@ -282,14 +315,22 @@ const handleSubmit = async () => {
             >
               {{ zodiacSymbols[`${currentPersonZodiac.mars}`] }}
             </span>
-            <input
-              type="text"
+            <select
               name="mars"
               v-model="currentPersonZodiac.mars"
               :disabled="isViewItem"
-              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
-              placeholder="Pluto zodiac"
-            />
+              class="bg-gray-50 rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+            >
+              <option value="-1" disabled selected>- Select option -</option>
+              <option
+                class="bg-gray-50"
+                v-for="option in zodiacItems"
+                :value="option"
+                :key="option"
+              >
+                {{ option }}
+              </option>
+            </select>
           </div>
         </div>
 
@@ -304,14 +345,22 @@ const handleSubmit = async () => {
             >
               {{ zodiacSymbols[`${currentPersonZodiac.jupiter}`] }}
             </span>
-            <input
-              type="text"
+            <select
               name="jupiter"
               v-model="currentPersonZodiac.jupiter"
               :disabled="isViewItem"
-              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
-              placeholder="Pluto zodiac"
-            />
+              class="bg-gray-50 rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+            >
+              <option value="-1" disabled selected>- Select option -</option>
+              <option
+                class="bg-gray-50"
+                v-for="option in zodiacItems"
+                :value="option"
+                :key="option"
+              >
+                {{ option }}
+              </option>
+            </select>
           </div>
         </div>
 
@@ -326,14 +375,22 @@ const handleSubmit = async () => {
             >
               {{ zodiacSymbols[`${currentPersonZodiac.saturn}`] }}
             </span>
-            <input
-              type="text"
+            <select
               name="saturn"
               v-model="currentPersonZodiac.saturn"
               :disabled="isViewItem"
-              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
-              placeholder="Pluto zodiac"
-            />
+              class="bg-gray-50 rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+            >
+              <option value="-1" disabled selected>- Select option -</option>
+              <option
+                class="bg-gray-50"
+                v-for="option in zodiacItems"
+                :value="option"
+                :key="option"
+              >
+                {{ option }}
+              </option>
+            </select>
           </div>
         </div>
 
@@ -348,14 +405,22 @@ const handleSubmit = async () => {
             >
               {{ zodiacSymbols[`${currentPersonZodiac.uranus}`] }}
             </span>
-            <input
-              type="text"
+            <select
               name="uranus"
               v-model="currentPersonZodiac.uranus"
               :disabled="isViewItem"
-              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
-              placeholder="Pluto zodiac"
-            />
+              class="bg-gray-50 rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+            >
+              <option value="-1" disabled selected>- Select option -</option>
+              <option
+                class="bg-gray-50"
+                v-for="option in zodiacItems"
+                :value="option"
+                :key="option"
+              >
+                {{ option }}
+              </option>
+            </select>
           </div>
         </div>
 
@@ -370,14 +435,22 @@ const handleSubmit = async () => {
             >
               {{ zodiacSymbols[`${currentPersonZodiac.neptune}`] }}
             </span>
-            <input
-              type="text"
+            <select
               name="neptune"
               v-model="currentPersonZodiac.neptune"
               :disabled="isViewItem"
-              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
-              placeholder="Pluto zodiac"
-            />
+              class="bg-gray-50 rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+            >
+              <option value="-1" disabled selected>- Select option -</option>
+              <option
+                class="bg-gray-50"
+                v-for="option in zodiacItems"
+                :value="option"
+                :key="option"
+              >
+                {{ option }}
+              </option>
+            </select>
           </div>
         </div>
 
@@ -392,16 +465,25 @@ const handleSubmit = async () => {
             >
               {{ zodiacSymbols[`${currentPersonZodiac.pluto}`] }}
             </span>
-            <input
-              type="text"
+            <select
               name="pluto"
               v-model="currentPersonZodiac.pluto"
               :disabled="isViewItem"
-              class="rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
-              placeholder="Pluto zodiac"
-            />
+              class="bg-gray-50 rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+            >
+              <option value="-1" disabled selected>- Select option -</option>
+              <option
+                class="bg-gray-50"
+                v-for="option in zodiacItems"
+                :value="option"
+                :key="option"
+              >
+                {{ option }}
+              </option>
+            </select>
           </div>
         </div>
+        <!-- ======================================= -->
       </div>
 
       <div class="flex items-center justify-start w-full mt-8">
