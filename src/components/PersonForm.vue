@@ -23,11 +23,13 @@ const modalTitle = computed(() => {
 
 const closeModal = () => {
   personStore.resetCurrentPerson()
+  zodiacStore.cancelZodiac()
   modalStore.resetModalState()
 }
 
 const resetModalForm = () => {
   personStore.resetPreEditedPerson()
+  zodiacStore.restoreZodiac()
 }
 
 const handleEditClick = () => {
@@ -42,6 +44,7 @@ const handleSubmit = async () => {
     await personStore.updatePerson()
   }
   personStore.resetCurrentPerson()
+  zodiacStore.cancelZodiac()
   modalStore.resetModalState()
 }
 </script>

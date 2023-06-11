@@ -27,14 +27,25 @@ const initZodiac: IZodiac = {
 
 export const useZodiacStore = defineStore('zodiac', () => {
   const currentPersonZodiac = ref<IZodiac>({ ...initZodiac })
+  const preEditedPersonZodiac = ref<IZodiac>({ ...initZodiac })
   const loading = ref<boolean>(false)
   const error = ref<string | null>(null)
+
+  const cancelZodiac = () => {
+    currentPersonZodiac.value = { ...initZodiac }
+    preEditedPersonZodiac.value = { ...initZodiac }
+  }
+
+  const restoreZodiac = () => {
+    currentPersonZodiac.value = { ...preEditedPersonZodiac.value }
+  }
 
   const getZodiacByPersonId = async (id: number) => {
     try {
       loading.value = true
       const { data } = await axios.get(`${zodiacApi}/person/${id}`)
-      currentPersonZodiac.value = data
+      currentPersonZodiac.value = { ...data }
+      preEditedPersonZodiac.value = { ...data }
 
       loading.value = false
       error.value = null
@@ -108,8 +119,11 @@ export const useZodiacStore = defineStore('zodiac', () => {
 
   return {
     currentPersonZodiac,
+    preEditedPersonZodiac,
     getZodiacByPersonId,
     createPersonZodiac,
-    updatePersonZodiac
+    updatePersonZodiac,
+    cancelZodiac,
+    restoreZodiac
   }
 })
