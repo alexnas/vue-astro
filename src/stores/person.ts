@@ -1,32 +1,20 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import axios from 'axios'
-import { useZodiacStore } from '@/stores/zodiac'
-import type { IPerson } from '@/types'
-import { API_BASE_URL, PERSON_ENDPOINT } from '@/constants/apiConstants'
-
-const personApi = `${API_BASE_URL}${PERSON_ENDPOINT}`
-
-const initPerson: IPerson = {
-  id: -1,
-  name: '',
-  surname: '',
-  birthday: '',
-  timezone: '',
-  birthplace: '',
-  description: '',
-  createdAt: '',
-  updatedAt: ''
-}
+import type { IPerson, IZodiac } from '@/types'
+import { PERSON_API, ZODIAC_API } from '@/constants/apiConstants'
+import { initPerson } from '@/constants/personConstants'
+import { getAll, getOneById, create, update, deleteById } from '@/services/apiService'
+import { initZodiac } from '@/constants/zodiacConstants'
+import { checkIfExistByName, checkIfNotExistById } from '@/services/personService'
 
 export const usePersonStore = defineStore('person', () => {
   const persons = ref<IPerson[]>([])
   const currentPerson = ref<IPerson>({ ...initPerson })
   const preEditedPerson = ref<IPerson>({ ...initPerson })
+  const currentPersonZodiac = ref<IZodiac>({ ...initZodiac })
+  const preEditedPersonZodiac = ref<IZodiac>({ ...initZodiac })
   const loading = ref<boolean>(false)
   const error = ref<string | null>(null)
-
-  const zodiacStore = useZodiacStore()
 
   const resetCurrentPerson = () => {
     preEditedPerson.value = { ...initPerson }
@@ -52,148 +40,123 @@ export const usePersonStore = defineStore('person', () => {
     return preEditedPerson.value
   }
 
+  const cancelZodiac = () => {
+    currentPersonZodiac.value = { ...initZodiac }
+    preEditedPersonZodiac.value = { ...initZodiac }
+  }
+
+  const restoreZodiac = () => {
+    currentPersonZodiac.value = { ...preEditedPersonZodiac.value }
+  }
+
   const getPersons = async () => {
-    try {
-      loading.value = true
-      const { data } = await axios.get(personApi)
+    const { data, dataLoading, dataError } = await getAll(PERSON_API)
+    if (data) {
       persons.value = data
-      loading.value = false
-      error.value = null
-    } catch (err: any) {
-      loading.value = false
-      if (axios.isAxiosError(error)) {
-        error.value = err.message
-        console.log('Error', err.message)
-      } else {
-        error.value = 'Unexpected error encountered'
-        console.log('Error', err)
+    }
+    loading.value = dataLoading
+    error.value = dataError
+    return { data, loading: dataLoading, error: dataError }
+  }
+
+  const createPerson = async (newPerson: IPerson, newZodiac: IZodiac) => {
+    const isNameDuplicated = checkIfExistByName(newPerson, persons.value)
+    if (isNameDuplicated) return
+
+    const { data, dataLoading, dataError } = await create(PERSON_API, newPerson)
+
+    if (data) {
+      persons.value.push(data)
+
+      let zodiac = { ...initZodiac }
+      const { data: zodiacData } = await create(ZODIAC_API, {
+        ...newZodiac,
+        personId: data.id
+      })
+      if (zodiacData) {
+        zodiac = { ...zodiacData }
       }
+
+      loading.value = dataLoading
+      error.value = dataError
+      return { data, loading: dataLoading, error: dataError, zodiac }
     }
   }
 
   const getPersonById = async (id: number) => {
-    try {
-      loading.value = true
-      const { data } = await axios.get(`${personApi}/${id}`)
+    const idx = checkIfNotExistById(id, persons.value)
+    if (!idx) return
+
+    const { data, dataLoading, dataError } = await getOneById(PERSON_API, id)
+    if (data) {
       currentPerson.value = data
-      loading.value = false
-      error.value = null
-      zodiacStore.getZodiacByPersonId(id)
-    } catch (err: any) {
-      loading.value = false
-      if (axios.isAxiosError(error)) {
-        error.value = err.message
-        console.log('Error', err.message)
-        currentPerson.value = { ...initPerson }
-      } else {
-        error.value = 'Unexpected error encountered'
-        console.log('Error', err)
-        currentPerson.value = { ...initPerson }
+      let zodiac = { ...initZodiac }
+      const { data: zodiacData } = await getOneById(ZODIAC_API, data.id, 'person')
+
+      if (zodiacData) {
+        currentPersonZodiac.value = { ...zodiacData }
+        preEditedPersonZodiac.value = { ...zodiacData }
+        zodiac = { ...zodiacData }
       }
+
+      loading.value = dataLoading
+      error.value = dataError
+      return { data, loading: dataLoading, error: dataError, zodiac }
     }
   }
 
-  const createPerson = async () => {
-    const personItem = { ...currentPerson.value }
-    const idx = persons.value.findIndex(
-      (item) => item.name === personItem.name && item.surname === personItem.surname
-    )
-    if (idx >= 0) {
-      console.log(`Error: There is already such person instance with name=${personItem.name}`)
-      throw Error(
-        `There is already such person instance with name=${personItem.name} and surname=${personItem.surname} `
-      )
-    }
+  const updatePerson = async (updatedPerson: IPerson, updatedZodiac: IZodiac) => {
+    const isNameDuplicated = checkIfExistByName(updatedPerson, persons.value)
+    if (isNameDuplicated) return
 
-    const params = { ...personItem }
-
-    try {
-      loading.value = true
-      const { data } = await axios.post(personApi, params)
-      persons.value.push(data)
-
-      if (data && data.id && data.id > 0) {
-        zodiacStore.createPersonZodiac(data.id)
-      }
-
-      loading.value = false
-      error.value = null
-    } catch (err: any) {
-      loading.value = false
-      if (axios.isAxiosError(error)) {
-        error.value = err.message
-        console.log('Error', err.message)
-      } else {
-        error.value = 'Unexpected error encountered'
-        console.log('Error', err)
-      }
-    }
-  }
-
-  const updatePerson = async () => {
     const personItem = { ...currentPerson.value }
     const id = personItem.id
-    const idx = persons.value.findIndex((item) => item.id === id)
-    if (idx === -1) {
-      console.log(`Error: There is no such person instance with id=${id}`)
-      throw Error(`There is no such person instance with id=${id}`)
-    }
+    const idx = checkIfNotExistById(id, persons.value)
+    if (!idx) return
 
-    const params = { ...personItem }
-
-    try {
-      loading.value = true
-      const { data } = await axios.put(`${personApi}/${id}`, params)
+    const { data, dataLoading, dataError } = await update(PERSON_API, id, updatedPerson)
+    if (data) {
       persons.value[idx] = data
 
-      if (data && data.id && data.id > 0) {
-        zodiacStore.updatePersonZodiac(data.id)
+      let zodiac = { ...initZodiac }
+      const { data: oldZodiac } = await getOneById(ZODIAC_API, data.id, 'person')
+      if (oldZodiac && oldZodiac.id && oldZodiac.id > 0) {
+        const { data: zodiacData } = await update(ZODIAC_API, oldZodiac.id, {
+          ...updatedZodiac,
+          personId: data.id
+        })
+        if (zodiacData) {
+          zodiac = { ...zodiacData }
+        }
       }
 
-      loading.value = false
-      error.value = null
-    } catch (err: any) {
-      loading.value = false
-      if (axios.isAxiosError(error)) {
-        error.value = err.message
-        console.log('Error', err.message)
-      } else {
-        error.value = 'Unexpected error encountered'
-        console.log('Error', err)
-      }
+      loading.value = dataLoading
+      error.value = dataError
+      return { data, loading: dataLoading, error: dataError, zodiac }
     }
   }
 
   const deletePerson = async (personItem: IPerson) => {
     const id = personItem.id
-    const idx = persons.value.findIndex((item) => item.id === id)
-    if (idx === -1) {
-      console.log(`Error: There is no such person instance with id=${id}`)
-      throw Error(`There is no such person instance with id=${id}`)
+    const idx = checkIfNotExistById(id, persons.value)
+    if (!idx) return
+
+    const { data, dataLoading, dataError } = await deleteById(PERSON_API, id)
+    if (data.id) {
+      persons.value = persons.value.filter((item) => item.id !== id)
     }
 
-    try {
-      loading.value = true
-      await axios.delete(`${personApi}/${id}`)
-      persons.value = persons.value.filter((item) => item.id !== id)
-      loading.value = false
-      error.value = null
-    } catch (err: any) {
-      loading.value = false
-      if (axios.isAxiosError(error)) {
-        error.value = err.message
-        console.log('Error', err.message)
-      } else {
-        error.value = 'Unexpected error encountered'
-        console.log('Error', err)
-      }
-    }
+    loading.value = dataLoading
+    error.value = dataError
+    return { data, loading: dataLoading, error: dataError }
   }
 
   return {
     persons,
     currentPerson,
     preEditedPerson,
+    currentPersonZodiac,
+    preEditedPersonZodiac,
     loading,
     error,
     getPersons,
@@ -205,6 +168,8 @@ export const usePersonStore = defineStore('person', () => {
     setPreEditedPerson,
     createPerson,
     updatePerson,
-    deletePerson
+    deletePerson,
+    cancelZodiac,
+    restoreZodiac
   }
 })
