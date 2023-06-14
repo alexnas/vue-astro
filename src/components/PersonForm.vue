@@ -2,7 +2,6 @@
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { usePersonStore } from '@/stores/person'
-import { useZodiacStore } from '@/stores/zodiac'
 import { useModalStore } from '@/stores/modal'
 import { formatDateTime } from '@/tools/formatDate'
 import BaseModal from '@/components/BaseModal.vue'
@@ -10,9 +9,7 @@ import { zodiacSymbols } from '@/constants/zodiacSymbols'
 import { zodiacItems } from '@/constants/zodiacConstants'
 
 const personStore = usePersonStore()
-const { currentPerson } = storeToRefs(personStore)
-const zodiacStore = useZodiacStore()
-const { currentPersonZodiac } = storeToRefs(zodiacStore)
+const { currentPerson, currentPersonZodiac } = storeToRefs(personStore)
 const modalStore = useModalStore()
 const { isNewItem, isViewItem } = storeToRefs(modalStore)
 
@@ -24,13 +21,13 @@ const modalTitle = computed(() => {
 
 const closeModal = () => {
   personStore.resetCurrentPerson()
-  zodiacStore.cancelZodiac()
+  personStore.cancelZodiac()
   modalStore.resetModalState()
 }
 
 const resetModalForm = () => {
   personStore.resetPreEditedPerson()
-  zodiacStore.restoreZodiac()
+  personStore.restoreZodiac()
 }
 
 const handleEditClick = () => {
@@ -40,12 +37,12 @@ const handleEditClick = () => {
 
 const handleSubmit = async () => {
   if (isNewItem.value) {
-    await personStore.createPerson()
+    await personStore.createPerson(currentPerson.value, currentPersonZodiac.value)
   } else {
-    await personStore.updatePerson()
+    await personStore.updatePerson(currentPerson.value, currentPersonZodiac.value)
   }
   personStore.resetCurrentPerson()
-  zodiacStore.cancelZodiac()
+  personStore.cancelZodiac()
   modalStore.resetModalState()
 }
 </script>
