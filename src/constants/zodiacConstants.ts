@@ -1,4 +1,4 @@
-import type { IZodiac } from '@/types'
+import type { IZodiac, IZodiacChart } from '@/types'
 
 export const ARIES = 'aries'
 export const TAURUS = 'taurus'
@@ -45,4 +45,17 @@ export const initZodiac: IZodiac = {
   createdAt: '',
   updatedAt: '',
   personId: -1
+}
+
+export const initZodiacChart: IZodiacChart = {
+  sun: '',
+  moon: '',
+  mercury: '',
+  venus: '',
+  mars: '',
+  jupiter: '',
+  saturn: '',
+  uranus: '',
+  neptune: '',
+  pluto: ''
 }

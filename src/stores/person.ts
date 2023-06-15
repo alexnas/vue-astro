@@ -64,11 +64,11 @@ export const usePersonStore = defineStore('person', () => {
     if (isNameDuplicated) return
 
     const { data, dataLoading, dataError } = await create(PERSON_API, newPerson)
+    let zodiac = { ...initZodiac }
 
     if (data) {
       persons.value.push(data)
 
-      let zodiac = { ...initZodiac }
       const { data: zodiacData } = await create(ZODIAC_API, {
         ...newZodiac,
         personId: data.id
@@ -76,11 +76,10 @@ export const usePersonStore = defineStore('person', () => {
       if (zodiacData) {
         zodiac = { ...zodiacData }
       }
-
-      loading.value = dataLoading
-      error.value = dataError
-      return { data, loading: dataLoading, error: dataError, zodiac }
     }
+    loading.value = dataLoading
+    error.value = dataError
+    return { data, loading: dataLoading, error: dataError, zodiac }
   }
 
   const getPersonById = async (id: number) => {
