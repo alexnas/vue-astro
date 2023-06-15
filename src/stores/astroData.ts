@@ -6,10 +6,12 @@ import type {
   IInvertedObj,
   IBaseLevel,
   ISingleSet,
-  ICurrentAstroData
+  ICurrentAstroData,
+  IPerson
 } from '../types'
 import { dummyZodiac, dummyZodiac2 } from '@/data/dummyZodiacData'
 import zodiacPlanets from '@/constants/zodiacPlanets'
+import { initPerson } from '@/constants/personConstants'
 
 const initCurrentAstroData: ICurrentAstroData = {
   0: {
@@ -28,6 +30,8 @@ const initCurrentAstroData: ICurrentAstroData = {
 
 export const useAstroDataStore = defineStore('astroData', () => {
   const currentDoubleAstroData = ref<ICurrentAstroData>({ ...initCurrentAstroData })
+  const choosenPerson1 = ref<IPerson>({ ...initPerson })
+  const choosenPerson2 = ref<IPerson>({ ...initPerson })
 
   const getResultAstroData = (
     zodiacData1: IPersonSet = { ...dummyZodiac },
@@ -188,6 +192,8 @@ export const useAstroDataStore = defineStore('astroData', () => {
 
   return {
     currentDoubleAstroData,
+    choosenPerson1,
+    choosenPerson2,
     getResultAstroData
   }
 })

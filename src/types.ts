@@ -55,6 +55,8 @@ interface IZodiac {
   personId: number
 }
 
+type IZodiacChart = { [key: string]: string }
+
 export type {
   IPersonSet,
   IConverted,
@@ -65,5 +67,6 @@ export type {
   ISingleSet,
   ICurrentAstroData,
   IPerson,
-  IZodiac
+  IZodiac,
+  IZodiacChart
 }

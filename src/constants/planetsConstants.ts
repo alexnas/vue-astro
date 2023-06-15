@@ -10,3 +10,18 @@ export const URANUS = 'uranus'
 export const NEPTUNE = 'neptune'
 export const PLUTO = 'pluto'
 export const VULCAN = 'vulcan'
+
+export const planetItems: string[] = [
+  'sun',
+  'moon',
+  'mercury',
+  'venus',
+  'earth',
+  'mars',
+  'jupiter',
+  'saturn',
+  'uranus',
+  'neptune',
+  'pluto',
+  'vulcan'
+]
