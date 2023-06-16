@@ -133,6 +133,7 @@ export const useAstroDataStore = defineStore('astroData', () => {
     const lines: string[][] = []
     const branches: string[][] = []
     const circles: string[][] = []
+    const tryArray: string[] = []
 
     tails.forEach((tail) => {
       let curTail: string = tail
@@ -146,6 +147,9 @@ export const useAstroDataStore = defineStore('astroData', () => {
         let circle: string[] = []
 
         if (curTail === 'earth' || curTail === 'vulcan') {
+          if (tryArray.includes(curTail)) break
+          tryArray.push(curTail)
+
           branch = stack
           circle = [curTail]
           branches.push(branch)
