@@ -10,6 +10,7 @@ import type {
   IPerson
 } from '../types'
 import { dummyZodiac, dummyZodiac2 } from '@/data/dummyZodiacData'
+import { checkEmptyValue } from '@/services/astroDataService'
 import zodiacPlanets from '@/constants/zodiacPlanets'
 import { initPerson } from '@/constants/personConstants'
 
@@ -45,11 +46,14 @@ export const useAstroDataStore = defineStore('astroData', () => {
     const initAstroObjFirst: IPersonSet | null = {}
     const initAstroObjSecond: IPersonSet | null = {}
     const initAstroObjThird: IPersonSet | null = {}
-    Object.keys(initZodiacObj).forEach((id) => {
-      initAstroObjFirst[id] = zodiacPlanets[initZodiacObj[id]][0]
-      initAstroObjSecond[id] = zodiacPlanets[initZodiacObj[id]][1]
-      initAstroObjThird[id] = zodiacPlanets[initZodiacObj[id]][2]
-    })
+    const isEmptyValue = checkEmptyValue(initZodiacObj)
+    if (!isEmptyValue) {
+      Object.keys(initZodiacObj).forEach((id) => {
+        initAstroObjFirst[id] = zodiacPlanets[initZodiacObj[id]][0]
+        initAstroObjSecond[id] = zodiacPlanets[initZodiacObj[id]][1]
+        initAstroObjThird[id] = zodiacPlanets[initZodiacObj[id]][2]
+      })
+    }
     const initAstroObjAllGrades = [initAstroObjFirst, initAstroObjSecond, initAstroObjThird]
     return initAstroObjAllGrades
   }

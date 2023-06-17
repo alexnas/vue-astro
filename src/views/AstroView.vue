@@ -21,8 +21,8 @@ onMounted(() => {
           <h2 class="text-2xl font-medium text-teal-400 text-center">Initial Data First</h2>
           <div class="flex-col space-y-4">
             <DataCard
-              title="Initial Zodiac All (initAstroObjAllGrades)"
-              :data="currentDoubleAstroData[0].initAstroObjAllGrades"
+              title="Initial Zodiac All --SECOND-- (initAstroObjAllGrades)"
+              :data="currentDoubleAstroData[1].initAstroObjAllGrades"
             />
           </div>
         </div>
@@ -30,7 +30,7 @@ onMounted(() => {
           <h2 class="mt-6 text-2xl font-medium text-teal-400 text-center">Initial Data Second</h2>
           <div class="flex-col space-y-4">
             <DataCard
-              title="Initial Zodiac All (initAstroObjAllGrades)"
+              title="Initial Zodiac All --FIRST-- (initAstroObjAllGrades)"
               :data="currentDoubleAstroData[0].initAstroObjAllGrades"
             />
           </div>
@@ -38,32 +38,32 @@ onMounted(() => {
       </div>
       <div>
         <div>
-          <h2 class="text-2xl font-medium text-teal-400 text-center">Result Data First</h2>
-          <DataCard
-            title="Result Astro Data (all grades)"
-            :data="currentDoubleAstroData[0].convertedResAllGrades"
-          />
+          <h2 class="text-2xl font-medium text-teal-400 text-center">Result Data SECOND</h2>
           <div class="flex-col space-y-4">
             <hr class="w-full h-1 py-3 bg-teal-200 border-0 rounded dark:bg-gray-700" />
             <DataCard
-              title="BASE Level (all grades)"
-              :data="currentDoubleAstroData[0].baseLevelAllGrades"
+              title="BASE Level  [-2-]  (all grades)"
+              :data="currentDoubleAstroData[1].baseLevelAllGrades"
             />
           </div>
+          <DataCard
+            title="Result Astro Data [-2-] (all grades)"
+            :data="currentDoubleAstroData[1].convertedResAllGrades"
+          />
         </div>
         <div>
-          <h2 class="mt-6 text-2xl font-medium text-teal-400 text-center">Result Data Second</h2>
-          <DataCard
-            title="Result Astro Data (all grades)"
-            :data="currentDoubleAstroData[0].convertedResAllGrades"
-          />
+          <h2 class="mt-6 text-2xl font-medium text-teal-400 text-center">Result Data FIRST</h2>
           <div class="flex-col space-y-4">
             <hr class="w-full h-1 py-3 bg-teal-200 border-0 rounded dark:bg-gray-700" />
             <DataCard
-              title="BASE Level (all grades)"
+              title="BASE Level  [-1-]  (all grades)"
               :data="currentDoubleAstroData[0].baseLevelAllGrades"
             />
           </div>
+          <DataCard
+            title="Result Astro Data  [-1-]  (all grades)"
+            :data="currentDoubleAstroData[0].convertedResAllGrades"
+          />
         </div>
       </div>
     </div>
