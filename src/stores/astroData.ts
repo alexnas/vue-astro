@@ -10,7 +10,7 @@ import type {
   IPerson
 } from '../types'
 import { dummyZodiac, dummyZodiac2 } from '@/data/dummyZodiacData'
-import { checkEmptyValue } from '@/services/astroDataService'
+import { checkEmptyValue, getBaseLevel } from '@/services/astroDataService'
 import zodiacPlanets from '@/constants/zodiacPlanets'
 import { initPerson } from '@/constants/personConstants'
 
@@ -129,6 +129,7 @@ export const useAstroDataStore = defineStore('astroData', () => {
   }
 
   const getAstroData = (initObj: IPersonSet) => {
+    const { baseLevel } = getBaseLevel(initObj)
     const ids = Object.keys({ ...initObj })
     const parents = Object.values({ ...initObj })
     const tails = ids.filter((id) => !parents.includes(id))
@@ -136,7 +137,7 @@ export const useAstroDataStore = defineStore('astroData', () => {
     let stack: string[] = []
     const lines: string[][] = []
     const branches: string[][] = []
-    const circles: string[][] = []
+    let circles: string[][] = []
     const tryArray: string[] = []
 
     tails.forEach((tail) => {
@@ -176,6 +177,8 @@ export const useAstroDataStore = defineStore('astroData', () => {
       lines.push(stack)
       stack = []
     })
+
+    circles = [...baseLevel]
 
     return { circles, branches }
   }
