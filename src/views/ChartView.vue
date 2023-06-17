@@ -14,7 +14,7 @@ const astroDataStore = useAstroDataStore()
 const { currentDoubleAstroData, choosenPerson1, choosenPerson2 } = storeToRefs(astroDataStore)
 
 const toShow = computed(() => {
-  return choosenPerson1.value.id > 0 && choosenPerson2.value.id > 0
+  return { person1: choosenPerson1.value.id > 0, person2: choosenPerson2.value.id > 0 }
 })
 
 watch([() => choosenPerson1.value, () => choosenPerson2.value], async ([newValue1, newValue2]) => {
@@ -97,53 +97,65 @@ onMounted(() => {
       </div>
     </form>
 
-    <div v-if="toShow">
+    <div v-if="true">
       <div class="grid grid-cols-2 grid-flow-row gap-6 border-b-4">
         <div>
-          <ChartCard
-            title="Chart 1: Stage 1"
-            :data="currentDoubleAstroData[0].convertedResAllGrades[0]"
-            :baseLevel="currentDoubleAstroData[0].baseLevelAllGrades[0]"
-          />
+          <div v-if="toShow.person1">
+            <ChartCard
+              title="Chart 1: Stage 1"
+              :data="currentDoubleAstroData[0].convertedResAllGrades[0]"
+              :baseLevel="currentDoubleAstroData[0].baseLevelAllGrades[0]"
+            />
+          </div>
         </div>
         <div>
-          <ChartCard
-            title="Chart 2: Stage 1"
-            :data="currentDoubleAstroData[1].convertedResAllGrades[0]"
-            :baseLevel="currentDoubleAstroData[1].baseLevelAllGrades[0]"
-          />
+          <div v-if="toShow.person2">
+            <ChartCard
+              title="Chart 2: Stage 1"
+              :data="currentDoubleAstroData[1].convertedResAllGrades[0]"
+              :baseLevel="currentDoubleAstroData[1].baseLevelAllGrades[0]"
+            />
+          </div>
         </div>
       </div>
       <div class="grid grid-cols-2 grid-flow-row gap-6 border-b-4">
         <div>
-          <ChartCard
-            title="Chart 1: Stage 2"
-            :data="currentDoubleAstroData[0].convertedResAllGrades[1]"
-            :baseLevel="currentDoubleAstroData[0].baseLevelAllGrades[1]"
-          />
+          <div v-if="toShow.person1">
+            <ChartCard
+              title="Chart 1: Stage 2"
+              :data="currentDoubleAstroData[0].convertedResAllGrades[1]"
+              :baseLevel="currentDoubleAstroData[0].baseLevelAllGrades[1]"
+            />
+          </div>
         </div>
         <div>
-          <ChartCard
-            title="Chart 2: Stage 2"
-            :data="currentDoubleAstroData[1].convertedResAllGrades[1]"
-            :baseLevel="currentDoubleAstroData[1].baseLevelAllGrades[1]"
-          />
+          <div v-if="toShow.person2">
+            <ChartCard
+              title="Chart 2: Stage 2"
+              :data="currentDoubleAstroData[1].convertedResAllGrades[1]"
+              :baseLevel="currentDoubleAstroData[1].baseLevelAllGrades[1]"
+            />
+          </div>
         </div>
       </div>
       <div class="grid grid-cols-2 grid-flow-row gap-6">
         <div>
-          <ChartCard
-            title="Chart 1: Stage 3"
-            :data="currentDoubleAstroData[0].convertedResAllGrades[2]"
-            :baseLevel="currentDoubleAstroData[0].baseLevelAllGrades[2]"
-          />
+          <div v-if="toShow.person1">
+            <ChartCard
+              title="Chart 1: Stage 3"
+              :data="currentDoubleAstroData[0].convertedResAllGrades[2]"
+              :baseLevel="currentDoubleAstroData[0].baseLevelAllGrades[2]"
+            />
+          </div>
         </div>
         <div>
-          <ChartCard
-            title="Chart 2: Stage 3"
-            :data="currentDoubleAstroData[1].convertedResAllGrades[2]"
-            :baseLevel="currentDoubleAstroData[1].baseLevelAllGrades[2]"
-          />
+          <div v-if="toShow.person2">
+            <ChartCard
+              title="Chart 2: Stage 3"
+              :data="currentDoubleAstroData[1].convertedResAllGrades[2]"
+              :baseLevel="currentDoubleAstroData[1].baseLevelAllGrades[2]"
+            />
+          </div>
         </div>
       </div>
     </div>
