@@ -58,103 +58,105 @@ onMounted(() => {
       <h1 class="max-w-xs">Astro Chart: {{ choosenPerson2.name }} {{ choosenPerson2.surname }}</h1>
     </div>
 
-    <form class="grid grid-cols-2 text-white gap-2 px-4">
-      <div class="flex mt-1 max-w-xs">
-        <span
-          class="inline-flex items-center px-3 text-xl font-bold text-teal-400 hover:text-teal-500 bg-gray-100 hover:bg-gray-50 border border-r-0 border-gray-300 rounded-l-md"
-        >
-          1
-        </span>
+    <div class="overflow-y-auto h-[calc(100%-5rem)]">
+      <form class="grid grid-cols-2 text-white gap-6">
+        <div class="flex mt-1 max-w-xs">
+          <span
+            class="inline-flex items-center px-3 text-xl font-bold text-teal-400 hover:text-teal-500 bg-gray-100 hover:bg-gray-50 border border-r-0 border-gray-300 rounded-l-md"
+          >
+            1
+          </span>
 
-        <select
-          name="choosen1"
-          v-model="choosenPerson1"
-          class="bg-gray-50 rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
-        >
-          <option value="-1" disabled selected>- Select option -</option>
-          <option class="bg-gray-50" v-for="person in persons" :value="person" :key="person.id">
-            {{ person.name }} {{ person.surname }}
-          </option>
-        </select>
-      </div>
-      <div class="flex mt-1 max-w-xs">
-        <span
-          class="inline-flex items-center px-3 text-xl font-bold text-teal-400 hover:text-teal-500 bg-gray-100 hover:bg-gray-50 border border-r-0 border-gray-300 rounded-l-md"
-        >
-          2
-        </span>
+          <select
+            name="choosen1"
+            v-model="choosenPerson1"
+            class="bg-gray-50 rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+          >
+            <option value="-1" disabled selected>- Select option -</option>
+            <option class="bg-gray-50" v-for="person in persons" :value="person" :key="person.id">
+              {{ person.name }} {{ person.surname }}
+            </option>
+          </select>
+        </div>
+        <div class="flex mt-1 max-w-xs">
+          <span
+            class="inline-flex items-center px-3 text-xl font-bold text-teal-400 hover:text-teal-500 bg-gray-100 hover:bg-gray-50 border border-r-0 border-gray-300 rounded-l-md"
+          >
+            2
+          </span>
 
-        <select
-          name="choosen2"
-          v-model="choosenPerson2"
-          class="bg-gray-50 rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
-        >
-          <option value="-1" disabled selected>- Select option -</option>
-          <option class="bg-gray-50" v-for="person in persons" :value="person" :key="person.id">
-            {{ person.name }} {{ person.surname }}
-          </option>
-        </select>
-      </div>
-    </form>
+          <select
+            name="choosen2"
+            v-model="choosenPerson2"
+            class="bg-gray-50 rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2"
+          >
+            <option value="-1" disabled selected>- Select option -</option>
+            <option class="bg-gray-50" v-for="person in persons" :value="person" :key="person.id">
+              {{ person.name }} {{ person.surname }}
+            </option>
+          </select>
+        </div>
+      </form>
 
-    <div v-if="true">
-      <div class="grid grid-cols-2 grid-flow-row gap-6 border-b-4">
-        <div>
-          <div v-if="toShow.person1">
-            <ChartCard
-              title="Chart 1: Stage 1"
-              :data="currentDoubleAstroData[0].convertedResAllGrades[0]"
-              :baseLevel="currentDoubleAstroData[0].baseLevelAllGrades[0]"
-            />
+      <div v-if="true">
+        <div class="grid grid-cols-2 grid-flow-row gap-4 border-b-4">
+          <div>
+            <div v-if="toShow.person1">
+              <ChartCard
+                title="Chart 1: Stage 1"
+                :data="currentDoubleAstroData[0].convertedResAllGrades[0]"
+                :baseLevel="currentDoubleAstroData[0].baseLevelAllGrades[0]"
+              />
+            </div>
+          </div>
+          <div>
+            <div v-if="toShow.person2">
+              <ChartCard
+                title="Chart 2: Stage 1"
+                :data="currentDoubleAstroData[1].convertedResAllGrades[0]"
+                :baseLevel="currentDoubleAstroData[1].baseLevelAllGrades[0]"
+              />
+            </div>
           </div>
         </div>
-        <div>
-          <div v-if="toShow.person2">
-            <ChartCard
-              title="Chart 2: Stage 1"
-              :data="currentDoubleAstroData[1].convertedResAllGrades[0]"
-              :baseLevel="currentDoubleAstroData[1].baseLevelAllGrades[0]"
-            />
+        <div class="grid grid-cols-2 grid-flow-row gap-6 border-b-4">
+          <div>
+            <div v-if="toShow.person1">
+              <ChartCard
+                title="Chart 1: Stage 2"
+                :data="currentDoubleAstroData[0].convertedResAllGrades[1]"
+                :baseLevel="currentDoubleAstroData[0].baseLevelAllGrades[1]"
+              />
+            </div>
+          </div>
+          <div>
+            <div v-if="toShow.person2">
+              <ChartCard
+                title="Chart 2: Stage 2"
+                :data="currentDoubleAstroData[1].convertedResAllGrades[1]"
+                :baseLevel="currentDoubleAstroData[1].baseLevelAllGrades[1]"
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div class="grid grid-cols-2 grid-flow-row gap-6 border-b-4">
-        <div>
-          <div v-if="toShow.person1">
-            <ChartCard
-              title="Chart 1: Stage 2"
-              :data="currentDoubleAstroData[0].convertedResAllGrades[1]"
-              :baseLevel="currentDoubleAstroData[0].baseLevelAllGrades[1]"
-            />
+        <div class="grid grid-cols-2 grid-flow-row gap-6">
+          <div>
+            <div v-if="toShow.person1">
+              <ChartCard
+                title="Chart 1: Stage 3"
+                :data="currentDoubleAstroData[0].convertedResAllGrades[2]"
+                :baseLevel="currentDoubleAstroData[0].baseLevelAllGrades[2]"
+              />
+            </div>
           </div>
-        </div>
-        <div>
-          <div v-if="toShow.person2">
-            <ChartCard
-              title="Chart 2: Stage 2"
-              :data="currentDoubleAstroData[1].convertedResAllGrades[1]"
-              :baseLevel="currentDoubleAstroData[1].baseLevelAllGrades[1]"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="grid grid-cols-2 grid-flow-row gap-6">
-        <div>
-          <div v-if="toShow.person1">
-            <ChartCard
-              title="Chart 1: Stage 3"
-              :data="currentDoubleAstroData[0].convertedResAllGrades[2]"
-              :baseLevel="currentDoubleAstroData[0].baseLevelAllGrades[2]"
-            />
-          </div>
-        </div>
-        <div>
-          <div v-if="toShow.person2">
-            <ChartCard
-              title="Chart 2: Stage 3"
-              :data="currentDoubleAstroData[1].convertedResAllGrades[2]"
-              :baseLevel="currentDoubleAstroData[1].baseLevelAllGrades[2]"
-            />
+          <div>
+            <div v-if="toShow.person2">
+              <ChartCard
+                title="Chart 2: Stage 3"
+                :data="currentDoubleAstroData[1].convertedResAllGrades[2]"
+                :baseLevel="currentDoubleAstroData[1].baseLevelAllGrades[2]"
+              />
+            </div>
           </div>
         </div>
       </div>
