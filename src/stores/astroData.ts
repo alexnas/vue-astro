@@ -137,7 +137,6 @@ export const useAstroDataStore = defineStore('astroData', () => {
     let stack: string[] = []
     const lines: string[][] = []
     const branches: string[][] = []
-    let circles: string[][] = []
     const tryArray: string[] = []
 
     tails.forEach((tail) => {
@@ -149,28 +148,20 @@ export const useAstroDataStore = defineStore('astroData', () => {
         if (!stack.includes(initObj[curTail])) stack.push(initObj[curTail])
         curTail = initObj[curTail]
         let branch: string[] = []
-        let circle: string[] = []
 
         if (curTail === 'earth' || curTail === 'vulcan') {
           if (tryArray.includes(curTail)) break
           tryArray.push(curTail)
 
           branch = stack
-          circle = [curTail]
           branches.push(branch)
-          circles.push(circle)
           break
         }
         if (stack.includes(initObj[curTail])) {
-          const { lineArr, circleArr } = separateLineAndCircle(stack, initObj[curTail])
+          const { lineArr } = separateLineAndCircle(stack, initObj[curTail])
           branch = lineArr
-          circle = circleArr
 
           branches.push(branch)
-        }
-        const isIncludedAlready = isItemExist(circles, circle[0])
-        if (circle.length > 0 && !isIncludedAlready) {
-          circles.push(circle)
         }
       } while (!stack.includes(initObj[curTail]))
 
@@ -178,19 +169,7 @@ export const useAstroDataStore = defineStore('astroData', () => {
       stack = []
     })
 
-    circles = [...baseLevel]
-
-    return { circles, branches }
-  }
-
-  const isItemExist = (circles: string[][], item: string) => {
-    let res = false
-    circles.forEach((circleItem) => {
-      if (circleItem.includes(item)) {
-        res = true
-      }
-    })
-    return res
+    return { circles: [...baseLevel], branches }
   }
 
   const separateLineAndCircle = (arr: string[], item: string) => {
