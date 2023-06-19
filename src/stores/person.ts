@@ -5,7 +5,7 @@ import { PERSON_API, ZODIAC_API } from '@/constants/apiConstants'
 import { initPerson } from '@/constants/personConstants'
 import { getAll, getOneById, create, update, deleteById } from '@/services/apiService'
 import { initZodiac } from '@/constants/zodiacConstants'
-import { checkIfExistByName, checkIfNotExistById } from '@/services/personService'
+import { findExistedPersonByName, findNotExistedPersonById } from '@/services/personService'
 
 export const usePersonStore = defineStore('person', () => {
   const persons = ref<IPerson[]>([])
@@ -60,8 +60,8 @@ export const usePersonStore = defineStore('person', () => {
   }
 
   const createPerson = async (newPerson: IPerson, newZodiac: IZodiac) => {
-    const isNameDuplicated = checkIfExistByName(newPerson, persons.value)
-    if (isNameDuplicated) return
+    const idxDuplicated = findExistedPersonByName(newPerson, persons.value)
+    if (idxDuplicated >= 0) return
 
     const { data, dataLoading, dataError } = await create(PERSON_API, newPerson)
     let zodiac = { ...initZodiac }
@@ -83,8 +83,8 @@ export const usePersonStore = defineStore('person', () => {
   }
 
   const getPersonById = async (id: number) => {
-    const idx = checkIfNotExistById(id, persons.value)
-    if (!idx) return
+    const idx = findNotExistedPersonById(id, persons.value)
+    if (idx === -1) return
 
     const { data, dataLoading, dataError } = await getOneById(PERSON_API, id)
     if (data) {
@@ -105,15 +105,16 @@ export const usePersonStore = defineStore('person', () => {
   }
 
   const updatePerson = async (updatedPerson: IPerson, updatedZodiac: IZodiac) => {
-    const isNameDuplicated = checkIfExistByName(updatedPerson, persons.value)
-    if (isNameDuplicated) return
+    const idxDuplicated = findExistedPersonByName(updatedPerson, persons.value)
+    if (idxDuplicated >= 0) return
 
     const personItem = { ...currentPerson.value }
     const id = personItem.id
-    const idx = checkIfNotExistById(id, persons.value)
-    if (!idx) return
+    const idx = findNotExistedPersonById(id, persons.value)
+    if (idx === -1) return
 
     const { data, dataLoading, dataError } = await update(PERSON_API, id, updatedPerson)
+
     if (data) {
       persons.value[idx] = data
 
@@ -137,8 +138,8 @@ export const usePersonStore = defineStore('person', () => {
 
   const deletePerson = async (personItem: IPerson) => {
     const id = personItem.id
-    const idx = checkIfNotExistById(id, persons.value)
-    if (!idx) return
+    const idx = findNotExistedPersonById(id, persons.value)
+    if (idx === -1) return
 
     const { data, dataLoading, dataError } = await deleteById(PERSON_API, id)
     if (data.id) {

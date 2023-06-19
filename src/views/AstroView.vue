@@ -15,7 +15,7 @@ onMounted(() => {
 <template>
   <main class="mx-auto max-w-screen-xl">
     <h1 class="text-3xl font-bold underline text-teal-400 text-center my-4">Astro Show Info</h1>
-    <div class="grid grid-cols-2 gap-4 px-4">
+    <div class="grid grid-cols-2 gap-4 px-4 overflow-y-auto h-[calc(100%-5rem)]">
       <div>
         <div>
           <h2 class="text-2xl font-medium text-teal-400 text-center">Initial Data First</h2>

@@ -18,7 +18,6 @@ defineProps({
   }
 })
 </script>
-// class="overflow-x-auto"
 
 <template>
   <div

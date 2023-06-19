@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { Icon } from '@iconify/vue'
 import type { IPerson } from '@/types'
@@ -57,8 +57,10 @@ onMounted(() => {
     </button>
   </div>
 
-  <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-full mb-12 text-base text-left text-gray-500 dark:text-gray-400 bg-gray-50">
+  <div class="relative shadow-md sm:rounded-lg overflow-y-auto h-[calc(100%-5rem)]">
+    <table
+      class="w-full max-w-full mb-12 text-base text-left text-gray-500 dark:text-gray-400 bg-gray-50"
+    >
       <thead
         class="text-sm text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400 sticky top-0"
       >
