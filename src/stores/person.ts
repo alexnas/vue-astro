@@ -65,7 +65,6 @@ export const usePersonStore = defineStore('person', () => {
 
     const { data, dataLoading, dataError } = await create(PERSON_API, newPerson)
     let zodiac = { ...initZodiac }
-
     if (data) {
       persons.value.push(data)
 
@@ -87,9 +86,9 @@ export const usePersonStore = defineStore('person', () => {
     if (idx === -1) return
 
     const { data, dataLoading, dataError } = await getOneById(PERSON_API, id)
+    let zodiac = { ...initZodiac }
     if (data) {
       currentPerson.value = data
-      let zodiac = { ...initZodiac }
       const { data: zodiacData } = await getOneById(ZODIAC_API, data.id, 'person')
 
       if (zodiacData) {
@@ -97,11 +96,10 @@ export const usePersonStore = defineStore('person', () => {
         preEditedPersonZodiac.value = { ...zodiacData }
         zodiac = { ...zodiacData }
       }
-
-      loading.value = dataLoading
-      error.value = dataError
-      return { data, loading: dataLoading, error: dataError, zodiac }
     }
+    loading.value = dataLoading
+    error.value = dataError
+    return { data, loading: dataLoading, error: dataError, zodiac }
   }
 
   const updatePerson = async (updatedPerson: IPerson, updatedZodiac: IZodiac) => {
@@ -114,12 +112,11 @@ export const usePersonStore = defineStore('person', () => {
     if (idx === -1) return
 
     const { data, dataLoading, dataError } = await update(PERSON_API, id, updatedPerson)
-
+    let zodiac = { ...initZodiac }
     if (data) {
       persons.value[idx] = data
-
-      let zodiac = { ...initZodiac }
       const { data: oldZodiac } = await getOneById(ZODIAC_API, data.id, 'person')
+
       if (oldZodiac && oldZodiac.id && oldZodiac.id > 0) {
         const { data: zodiacData } = await update(ZODIAC_API, oldZodiac.id, {
           ...updatedZodiac,
@@ -129,11 +126,10 @@ export const usePersonStore = defineStore('person', () => {
           zodiac = { ...zodiacData }
         }
       }
-
-      loading.value = dataLoading
-      error.value = dataError
-      return { data, loading: dataLoading, error: dataError, zodiac }
     }
+    loading.value = dataLoading
+    error.value = dataError
+    return { data, loading: dataLoading, error: dataError, zodiac }
   }
 
   const deletePerson = async (personItem: IPerson) => {
@@ -145,7 +141,6 @@ export const usePersonStore = defineStore('person', () => {
     if (data.id) {
       persons.value = persons.value.filter((item) => item.id !== id)
     }
-
     loading.value = dataLoading
     error.value = dataError
     return { data, loading: dataLoading, error: dataError }
