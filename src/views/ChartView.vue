@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import { computed, onMounted, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import type { IZodiac, IZodiacChart } from '@/types'
 import ChartCard from '@/components/ChartCard.vue'
 import { useAstroDataStore } from '@/stores/astroData'
 import { usePersonStore } from '@/stores/person'
 import { initZodiacChart } from '@/constants/zodiacConstants'
+import type { IPerson } from '@/types'
+import { initPerson } from '@/constants/personConstants'
 
 const personStore = usePersonStore()
 const { persons } = storeToRefs(personStore)
 
 const astroDataStore = useAstroDataStore()
 const { currentDoubleAstroData, choosenPerson1, choosenPerson2 } = storeToRefs(astroDataStore)
+const tempPersonVal = ref<IPerson>({ ...initPerson })
 
 const toShow = computed(() => {
   return { person1: choosenPerson1.value.id > 0, person2: choosenPerson2.value.id > 0 }
@@ -46,6 +49,13 @@ const cleanZodiacData = (personZodiac: IZodiac) => {
   return res
 }
 
+const toggleCharts = () => {
+  tempPersonVal.value = { ...choosenPerson1.value }
+  choosenPerson1.value = { ...choosenPerson2.value }
+  choosenPerson2.value = { ...tempPersonVal.value }
+  tempPersonVal.value = { ...initPerson }
+}
+
 onMounted(() => {
   personStore.getPersons()
 })
@@ -59,8 +69,8 @@ onMounted(() => {
     </div>
 
     <div class="overflow-y-auto h-[calc(100%-5rem)]">
-      <form class="grid grid-cols-2 text-white gap-6">
-        <div class="flex mt-1 max-w-xs">
+      <form class="grid grid-cols-12 text-white gap-6">
+        <div class="col-span-5 flex mt-1 max-w-xs">
           <span
             class="inline-flex items-center px-3 text-xl font-bold text-teal-400 hover:text-teal-500 bg-gray-100 hover:bg-gray-50 border border-r-0 border-gray-300 rounded-l-md"
           >
@@ -78,7 +88,16 @@ onMounted(() => {
             </option>
           </select>
         </div>
-        <div class="flex mt-1 max-w-xs">
+        <div class="col-span-2 flex justify-self-center mt-1 max-w-xs">
+          <button
+            class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-700 transition duration-150 ease-in-out enabled:hover:bg-teal-600 bg-teal-500 rounded-md sm:rounded-lg text-white px-3 text-lg"
+            type="button"
+            @click.prevent="toggleCharts()"
+          >
+            {{ '\u{21C4}' }}
+          </button>
+        </div>
+        <div class="col-span-5 flex mt-1 max-w-xs">
           <span
             class="inline-flex items-center px-3 text-xl font-bold text-teal-400 hover:text-teal-500 bg-gray-100 hover:bg-gray-50 border border-r-0 border-gray-300 rounded-l-md"
           >
