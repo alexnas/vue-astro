@@ -2,15 +2,35 @@
 import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { Icon } from '@iconify/vue'
-import type { IPerson } from '@/types'
+import type { IPerson, PersonKeys } from '@/types'
 import { usePersonStore } from '@/stores/person'
 import { useModalStore } from '@/stores/modal'
 import { formatDateTime } from '@/tools/formatDate'
+import { makeSortedByProperty } from '@/services/personService'
 import PersonForm from '@/components/PersonForm.vue'
 
 const personStore = usePersonStore()
-const { persons } = storeToRefs(personStore)
+const { persons, sortProperty, sortOrder } = storeToRefs(personStore)
 const modalStore = useModalStore()
+
+const sortedPersons = computed(() => {
+  const sorted = [...persons.value]
+  sorted.sort(makeSortedByProperty(sortProperty.value, sortOrder.value))
+  return sorted
+})
+
+const sortSymbol = computed(() => {
+  return sortOrder.value === 'asc' ? '\u{0020}\u{21E7}' : '\u{0020}\u{21E9}'
+})
+
+const handleSort = (property: PersonKeys) => {
+  if (sortProperty.value === property) {
+    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortProperty.value = property
+    sortOrder.value = 'asc'
+  }
+}
 
 const handleAddNewClick = () => {
   personStore.cancelPreEditedPerson()
@@ -66,21 +86,84 @@ onMounted(() => {
       >
         <tr>
           <th scope="col" class="px-4 py-3">#</th>
-          <th scope="col" class="px-4 py-3">ID</th>
-          <th scope="col" class="px-4 py-3">Name</th>
-          <th scope="col" class="px-4 py-3">Surname</th>
-          <th scope="col" class="px-4 py-3">Birthday</th>
-          <th scope="col" class="px-4 py-3">TZ</th>
-          <th scope="col" class="px-4 py-3">Birthplace</th>
-          <th scope="col" class="px-4 py-3">Description</th>
-          <th scope="col" class="px-4 py-3">Created</th>
-          <th scope="col" class="px-4 py-3">Updated</th>
+          <th
+            scope="col"
+            class="px-4 py-3 hover:bg-teal-100 rounded-lg cursor-pointer whitespace-nowrap"
+            :class="sortProperty === 'id' ? 'text-teal-600' : ''"
+            @click="handleSort('id')"
+          >
+            ID<span class="" v-if="sortProperty === 'id'">{{ sortSymbol }}</span>
+          </th>
+          <th
+            scope="col"
+            class="px-4 py-3 hover:bg-teal-100 rounded-lg cursor-pointer whitespace-nowrap"
+            :class="sortProperty === 'name' ? 'text-teal-600' : ''"
+            @click="handleSort('name')"
+          >
+            Name<span class="" v-if="sortProperty === 'name'">{{ sortSymbol }}</span>
+          </th>
+          <th
+            scope="col"
+            class="px-4 py-3 hover:bg-teal-100 rounded-lg cursor-pointer whitespace-nowrap"
+            :class="sortProperty === 'surname' ? 'text-teal-600' : ''"
+            @click="handleSort('surname')"
+          >
+            Surname<span v-if="sortProperty === 'surname'">{{ sortSymbol }}</span>
+          </th>
+          <th
+            scope="col"
+            class="px-4 py-3 hover:bg-teal-100 rounded-lg cursor-pointer whitespace-nowrap"
+            :class="sortProperty === 'birthday' ? 'text-teal-600' : ''"
+            @click="handleSort('birthday')"
+          >
+            Birthday<span class="" v-if="sortProperty === 'birthday'">{{ sortSymbol }}</span>
+          </th>
+          <th
+            scope="col"
+            class="px-4 py-3 hover:bg-teal-100 rounded-lg cursor-pointer whitespace-nowrap"
+            :class="sortProperty === 'timezone' ? 'text-teal-600' : ''"
+            @click="handleSort('timezone')"
+          >
+            TZ<span class="" v-if="sortProperty === 'timezone'">{{ sortSymbol }}</span>
+          </th>
+          <th
+            scope="col"
+            class="px-4 py-3 hover:bg-teal-100 rounded-lg cursor-pointer whitespace-nowrap"
+            :class="sortProperty === 'birthplace' ? 'text-teal-600' : ''"
+            @click="handleSort('birthplace')"
+          >
+            Birthplace<span class="" v-if="sortProperty === 'birthplace'">{{ sortSymbol }}</span>
+          </th>
+          <th
+            scope="col"
+            class="px-4 py-3 hover:bg-teal-100 rounded-lg cursor-pointer whitespace-nowrap"
+            :class="sortProperty === 'description' ? 'text-teal-600' : ''"
+            @click="handleSort('description')"
+          >
+            Description<span class="" v-if="sortProperty === 'description'">{{ sortSymbol }}</span>
+          </th>
+          <th
+            scope="col"
+            class="px-4 py-3 hover:bg-teal-100 rounded-lg cursor-pointer whitespace-nowrap"
+            :class="sortProperty === 'createdAt' ? 'text-teal-600' : ''"
+            @click="handleSort('createdAt')"
+          >
+            Created<span class="" v-if="sortProperty === 'createdAt'">{{ sortSymbol }}</span>
+          </th>
+          <th
+            scope="col"
+            class="px-4 py-3 hover:bg-teal-100 rounded-lg cursor-pointer whitespace-nowrap"
+            :class="sortProperty === 'updatedAt' ? 'text-teal-600' : ''"
+            @click="handleSort('updatedAt')"
+          >
+            Updated<span class="" v-if="sortProperty === 'updatedAt'">{{ sortSymbol }}</span>
+          </th>
           <th scope="col" class="px-4 py-3">Action</th>
         </tr>
       </thead>
       <tbody>
         <tr
-          v-for="(person, idx) in persons"
+          v-for="(person, idx) in sortedPersons"
           :key="person.id"
           class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
         >

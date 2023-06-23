@@ -36,6 +36,8 @@ interface IPerson {
   updatedAt: string
 }
 
+type PersonKeys = keyof IPerson
+
 interface IZodiac {
   id: number
   sun: string
@@ -67,6 +69,7 @@ export type {
   ISingleSet,
   ICurrentAstroData,
   IPerson,
+  PersonKeys,
   IZodiac,
   IZodiacChart
 }
