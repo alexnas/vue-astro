@@ -10,11 +10,22 @@ import { makeSortedByProperty } from '@/services/personService'
 import PersonForm from '@/components/PersonForm.vue'
 
 const personStore = usePersonStore()
-const { persons, sortProperty, sortOrder } = storeToRefs(personStore)
+const { persons, sortProperty, sortOrder, filterStr } = storeToRefs(personStore)
 const modalStore = useModalStore()
 
+const filteredPersons = computed(() => {
+  const filtered = persons.value.filter((item) => {
+    if (filterStr.value === '') return true
+    const isFound =
+      item.name.toLowerCase().indexOf(filterStr.value.toLowerCase()) >= 0 ||
+      item.surname.toLowerCase().indexOf(filterStr.value.toLowerCase()) >= 0
+    return isFound
+  })
+  return filtered
+})
+
 const sortedPersons = computed(() => {
-  const sorted = [...persons.value]
+  const sorted = [...filteredPersons.value]
   sorted.sort(makeSortedByProperty(sortProperty.value, sortOrder.value))
   return sorted
 })
@@ -76,6 +87,7 @@ onMounted(() => {
       />
     </button>
   </div>
+  {{ filterStr }}
 
   <div class="relative shadow-md sm:rounded-lg overflow-y-auto h-[calc(100%-5rem)]">
     <table
