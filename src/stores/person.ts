@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { IPerson, IZodiac } from '@/types'
+import type { IPerson, PersonKeys, IZodiac } from '@/types'
 import { PERSON_API, ZODIAC_API } from '@/constants/apiConstants'
 import { initPerson } from '@/constants/personConstants'
 import { getAll, getOneById, create, update, deleteById } from '@/services/apiService'
@@ -15,6 +15,8 @@ export const usePersonStore = defineStore('person', () => {
   const preEditedPersonZodiac = ref<IZodiac>({ ...initZodiac })
   const loading = ref<boolean>(false)
   const error = ref<string | null>(null)
+  const sortProperty = ref<PersonKeys>('name')
+  const sortOrder = ref<'asc' | 'desc'>('asc')
 
   const resetCurrentPerson = () => {
     preEditedPerson.value = { ...initPerson }
@@ -154,6 +156,8 @@ export const usePersonStore = defineStore('person', () => {
     preEditedPersonZodiac,
     loading,
     error,
+    sortProperty,
+    sortOrder,
     getPersons,
     getPersonById,
     resetCurrentPerson,
