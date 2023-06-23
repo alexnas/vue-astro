@@ -17,6 +17,7 @@ export const usePersonStore = defineStore('person', () => {
   const error = ref<string | null>(null)
   const sortProperty = ref<PersonKeys>('name')
   const sortOrder = ref<'asc' | 'desc'>('asc')
+  const filterStr = ref<string>('')
 
   const resetCurrentPerson = () => {
     preEditedPerson.value = { ...initPerson }
@@ -158,6 +159,7 @@ export const usePersonStore = defineStore('person', () => {
     error,
     sortProperty,
     sortOrder,
+    filterStr,
     getPersons,
     getPersonById,
     resetCurrentPerson,
