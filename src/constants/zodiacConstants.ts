@@ -1,5 +1,9 @@
 import type { IZodiac, IZodiacChart } from '@/types'
 
+interface IZodiacSymbols {
+  [key: string]: string
+}
+
 export const ARIES = 'aries'
 export const TAURUS = 'taurus'
 export const GEMINI = 'gemini'
@@ -58,4 +62,21 @@ export const initZodiacChart: IZodiacChart = {
   uranus: '',
   neptune: '',
   pluto: ''
+}
+
+const noEmoji = '\u{FE0E}'
+
+export const zodiacSymbols: IZodiacSymbols = {
+  aries: '\u{2648}' + noEmoji,
+  taurus: '\u{2649}' + noEmoji,
+  gemini: '\u{264A}' + noEmoji,
+  cancer: '\u{264B}' + noEmoji,
+  leo: '\u{264C}' + noEmoji,
+  virgo: '\u{264D}' + noEmoji,
+  libra: '\u{264E}' + noEmoji,
+  scorpio: '\u{264F}' + noEmoji,
+  sagittarius: '\u{2650}' + noEmoji,
+  capricorn: '\u{2651}' + noEmoji,
+  aquarius: '\u{2652}' + noEmoji,
+  pisces: '\u{2653}' + noEmoji
 }

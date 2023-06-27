@@ -5,7 +5,7 @@ import { usePersonStore } from '@/stores/person'
 import { useModalStore } from '@/stores/modal'
 import { formatDateTime } from '@/tools/formatDate'
 import BaseModal from '@/components/BaseModal.vue'
-import { zodiacSymbols } from '@/constants/zodiacSymbols'
+import { zodiacSymbols } from '@/constants/zodiacConstants'
 import { zodiacItems } from '@/constants/zodiacConstants'
 
 const personStore = usePersonStore()
