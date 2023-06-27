@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { planetShort, planetSymbols } from '@/constants/planetsConstants'
+
 defineProps({
   data: {
     type: Object || Array,
@@ -19,7 +21,7 @@ defineProps({
     <ul class="flex" v-for="planetChild in data[planet]['children']" :key="planetChild">
       <div class="flex items-center w-6 h-12">{{ '<--' }}</div>
       <div class="p-2 mb-1 min-w-sm w-20 h-12 rounded-xl border-2">
-        {{ planetChild }}
+        {{ `${planetSymbols[planetChild]} ${planetShort[planetChild]}` }}
       </div>
       <ChartItem :data="data" :planet="planetChild" />
     </ul>

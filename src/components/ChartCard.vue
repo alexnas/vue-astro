@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { IBaseLevel } from '../types'
-import ChartItem from './ChartItem.vue'
+import type { IBaseLevel } from '@/types'
+import ChartItem from '@/components/ChartItem.vue'
+import { planetShort, planetSymbols } from '@/constants/planetsConstants'
 
 defineProps({
   title: {
@@ -33,7 +34,7 @@ defineProps({
         <div class="text-slate-500" v-for="planet in planetGroup" :key="planet">
           <div class="flex">
             <div class="p-2 min-w-sm w-20 min-h-fit rounded-xl border-2 border-teal-200">
-              {{ planet }}
+              {{ `${planetSymbols[planet]} ${planetShort[planet]}` }}
             </div>
 
             <ChartItem :data="data" :planet="planet" />
