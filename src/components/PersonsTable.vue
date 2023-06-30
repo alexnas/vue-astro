@@ -7,7 +7,7 @@ import { usePersonStore } from '@/stores/person'
 import { useModalStore } from '@/stores/modal'
 import { formatDateTime } from '@/tools/formatDate'
 import { makeSortedByProperty } from '@/services/personService'
-import PersonForm from '@/components/PersonForm.vue'
+import PersonForm from '@/components/personForm/PersonForm.vue'
 
 const personStore = usePersonStore()
 const { persons, sortProperty, sortOrder, filterStr } = storeToRefs(personStore)
