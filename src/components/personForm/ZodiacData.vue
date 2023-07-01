@@ -5,6 +5,7 @@ import { useModalStore } from '@/stores/modal'
 import { zodiacSymbols } from '@/constants/zodiacConstants'
 import { zodiacItems } from '@/constants/zodiacConstants'
 import FormSubtitle from './FormSubtitle.vue'
+import { Field, ErrorMessage } from 'vee-validate'
 
 const personStore = usePersonStore()
 const { currentPersonZodiac } = storeToRefs(personStore)
@@ -22,7 +23,8 @@ const { isViewItem } = storeToRefs(modalStore)
         <span class="zodiac-symbol">
           {{ zodiacSymbols[`${currentPersonZodiac.sun}`] }}
         </span>
-        <select
+        <Field
+          as="select"
           name="sun"
           v-model="currentPersonZodiac.sun"
           :disabled="isViewItem"
@@ -32,8 +34,9 @@ const { isViewItem } = storeToRefs(modalStore)
           <option class="bg-gray-50" v-for="option in zodiacItems" :value="option" :key="option">
             {{ option }}
           </option>
-        </select>
+        </Field>
       </div>
+      <ErrorMessage name="sun" class="form-field-error" />
     </div>
 
     <div>
@@ -42,7 +45,8 @@ const { isViewItem } = storeToRefs(modalStore)
         <span class="zodiac-symbol">
           {{ zodiacSymbols[`${currentPersonZodiac.moon}`] }}
         </span>
-        <select
+        <Field
+          as="select"
           name="moon"
           v-model="currentPersonZodiac.moon"
           :disabled="isViewItem"
@@ -52,8 +56,9 @@ const { isViewItem } = storeToRefs(modalStore)
           <option class="bg-gray-50" v-for="option in zodiacItems" :value="option" :key="option">
             {{ option }}
           </option>
-        </select>
+        </Field>
       </div>
+      <ErrorMessage name="moon" class="form-field-error" />
     </div>
 
     <div>
@@ -62,7 +67,8 @@ const { isViewItem } = storeToRefs(modalStore)
         <span class="zodiac-symbol">
           {{ zodiacSymbols[`${currentPersonZodiac.mercury}`] }}
         </span>
-        <select
+        <Field
+          as="select"
           name="mercury"
           v-model="currentPersonZodiac.mercury"
           :disabled="isViewItem"
@@ -72,8 +78,9 @@ const { isViewItem } = storeToRefs(modalStore)
           <option class="bg-gray-50" v-for="option in zodiacItems" :value="option" :key="option">
             {{ option }}
           </option>
-        </select>
+        </Field>
       </div>
+      <ErrorMessage name="mercury" class="form-field-error" />
     </div>
 
     <div>
@@ -82,7 +89,8 @@ const { isViewItem } = storeToRefs(modalStore)
         <span class="zodiac-symbol">
           {{ zodiacSymbols[`${currentPersonZodiac.venus}`] }}
         </span>
-        <select
+        <Field
+          as="select"
           name="venus"
           v-model="currentPersonZodiac.venus"
           :disabled="isViewItem"
@@ -92,8 +100,9 @@ const { isViewItem } = storeToRefs(modalStore)
           <option class="bg-gray-50" v-for="option in zodiacItems" :value="option" :key="option">
             {{ option }}
           </option>
-        </select>
+        </Field>
       </div>
+      <ErrorMessage name="venus" class="form-field-error" />
     </div>
 
     <div>
@@ -102,7 +111,8 @@ const { isViewItem } = storeToRefs(modalStore)
         <span class="zodiac-symbol">
           {{ zodiacSymbols[`${currentPersonZodiac.mars}`] }}
         </span>
-        <select
+        <Field
+          as="select"
           name="mars"
           v-model="currentPersonZodiac.mars"
           :disabled="isViewItem"
@@ -112,8 +122,9 @@ const { isViewItem } = storeToRefs(modalStore)
           <option class="bg-gray-50" v-for="option in zodiacItems" :value="option" :key="option">
             {{ option }}
           </option>
-        </select>
+        </Field>
       </div>
+      <ErrorMessage name="mars" class="form-field-error" />
     </div>
 
     <div>
@@ -122,7 +133,8 @@ const { isViewItem } = storeToRefs(modalStore)
         <span class="zodiac-symbol">
           {{ zodiacSymbols[`${currentPersonZodiac.jupiter}`] }}
         </span>
-        <select
+        <Field
+          as="select"
           name="jupiter"
           v-model="currentPersonZodiac.jupiter"
           :disabled="isViewItem"
@@ -132,8 +144,9 @@ const { isViewItem } = storeToRefs(modalStore)
           <option class="bg-gray-50" v-for="option in zodiacItems" :value="option" :key="option">
             {{ option }}
           </option>
-        </select>
+        </Field>
       </div>
+      <ErrorMessage name="jupiter" class="form-field-error" />
     </div>
 
     <div>
@@ -142,7 +155,8 @@ const { isViewItem } = storeToRefs(modalStore)
         <span class="zodiac-symbol">
           {{ zodiacSymbols[`${currentPersonZodiac.saturn}`] }}
         </span>
-        <select
+        <Field
+          as="select"
           name="saturn"
           v-model="currentPersonZodiac.saturn"
           :disabled="isViewItem"
@@ -152,8 +166,9 @@ const { isViewItem } = storeToRefs(modalStore)
           <option class="bg-gray-50" v-for="option in zodiacItems" :value="option" :key="option">
             {{ option }}
           </option>
-        </select>
+        </Field>
       </div>
+      <ErrorMessage name="saturn" class="form-field-error" />
     </div>
 
     <div>
@@ -162,7 +177,8 @@ const { isViewItem } = storeToRefs(modalStore)
         <span class="zodiac-symbol">
           {{ zodiacSymbols[`${currentPersonZodiac.uranus}`] }}
         </span>
-        <select
+        <Field
+          as="select"
           name="uranus"
           v-model="currentPersonZodiac.uranus"
           :disabled="isViewItem"
@@ -172,8 +188,9 @@ const { isViewItem } = storeToRefs(modalStore)
           <option class="bg-gray-50" v-for="option in zodiacItems" :value="option" :key="option">
             {{ option }}
           </option>
-        </select>
+        </Field>
       </div>
+      <ErrorMessage name="uranus" class="form-field-error" />
     </div>
 
     <div>
@@ -182,7 +199,8 @@ const { isViewItem } = storeToRefs(modalStore)
         <span class="zodiac-symbol">
           {{ zodiacSymbols[`${currentPersonZodiac.neptune}`] }}
         </span>
-        <select
+        <Field
+          as="select"
           name="neptune"
           v-model="currentPersonZodiac.neptune"
           :disabled="isViewItem"
@@ -192,8 +210,9 @@ const { isViewItem } = storeToRefs(modalStore)
           <option class="bg-gray-50" v-for="option in zodiacItems" :value="option" :key="option">
             {{ option }}
           </option>
-        </select>
+        </Field>
       </div>
+      <ErrorMessage name="neptune" class="form-field-error" />
     </div>
 
     <div>
@@ -202,7 +221,8 @@ const { isViewItem } = storeToRefs(modalStore)
         <span class="zodiac-symbol">
           {{ zodiacSymbols[`${currentPersonZodiac.pluto}`] }}
         </span>
-        <select
+        <Field
+          as="select"
           name="pluto"
           v-model="currentPersonZodiac.pluto"
           :disabled="isViewItem"
@@ -212,9 +232,10 @@ const { isViewItem } = storeToRefs(modalStore)
           <option class="bg-gray-50" v-for="option in zodiacItems" :value="option" :key="option">
             {{ option }}
           </option>
-        </select>
+        </Field>
       </div>
     </div>
+    <ErrorMessage name="pluto" class="form-field-error" />
   </div>
 </template>
 
@@ -230,5 +251,8 @@ const { isViewItem } = storeToRefs(modalStore)
 }
 .zodiac-select {
   @apply bg-gray-50 rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2;
+}
+.form-field-error {
+  @apply text-orange-600 text-sm;
 }
 </style>

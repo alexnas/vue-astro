@@ -4,6 +4,7 @@ import { formatDateTime } from '@/tools/formatDate'
 import { usePersonStore } from '@/stores/person'
 import { useModalStore } from '@/stores/modal'
 import FormSubtitle from './FormSubtitle.vue'
+import { Field, ErrorMessage } from 'vee-validate'
 
 const personStore = usePersonStore()
 const { currentPerson } = storeToRefs(personStore)
@@ -18,7 +19,7 @@ const { isNewItem, isViewItem } = storeToRefs(modalStore)
     <div v-if="currentPerson" class="grid lg:grid-cols-4 grid-cols-3 gap-4">
       <div>
         <label class="person-label">Name</label>
-        <input
+        <Field
           name="name"
           type="text"
           v-model="currentPerson.name"
@@ -26,11 +27,12 @@ const { isNewItem, isViewItem } = storeToRefs(modalStore)
           class="person-input"
           placeholder="Person name"
         />
+        <ErrorMessage name="name" class="form-field-error" />
       </div>
 
       <div>
         <label class="person-label">Surname</label>
-        <input
+        <Field
           name="surname"
           type="text"
           v-model="currentPerson.surname"
@@ -38,11 +40,12 @@ const { isNewItem, isViewItem } = storeToRefs(modalStore)
           class="person-input"
           placeholder="Person surname"
         />
+        <ErrorMessage name="surname" class="form-field-error" />
       </div>
 
       <div>
         <label class="person-label">Birthday</label>
-        <input
+        <Field
           name="birthday"
           type="text"
           v-model="currentPerson.birthday"
@@ -50,11 +53,12 @@ const { isNewItem, isViewItem } = storeToRefs(modalStore)
           class="person-input"
           placeholder="Person birthday"
         />
+        <ErrorMessage name="birthday" class="form-field-error" />
       </div>
 
       <div>
         <label class="person-label">Time zone</label>
-        <input
+        <Field
           name="timezone"
           type="text"
           v-model="currentPerson.timezone"
@@ -62,11 +66,12 @@ const { isNewItem, isViewItem } = storeToRefs(modalStore)
           class="person-input"
           placeholder="Person timezone"
         />
+        <ErrorMessage name="timezone" class="form-field-error" />
       </div>
 
       <div>
         <label class="person-label">Birthplace</label>
-        <input
+        <Field
           name="birthplace"
           type="text"
           v-model="currentPerson.birthplace"
@@ -74,11 +79,12 @@ const { isNewItem, isViewItem } = storeToRefs(modalStore)
           class="person-input"
           placeholder="Person surname"
         />
+        <ErrorMessage name="birthplace" class="form-field-error" />
       </div>
 
       <div>
         <label class="person-label">Description</label>
-        <input
+        <Field
           name="description"
           type="text"
           v-model="currentPerson.description"
@@ -86,6 +92,7 @@ const { isNewItem, isViewItem } = storeToRefs(modalStore)
           class="person-input"
           placeholder="Person surname"
         />
+        <ErrorMessage name="description" class="form-field-error" />
       </div>
 
       <div v-if="!isNewItem">
@@ -119,5 +126,8 @@ const { isNewItem, isViewItem } = storeToRefs(modalStore)
 }
 .person-input {
   @apply mt-1 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border;
+}
+.form-field-error {
+  @apply text-orange-600 text-sm;
 }
 </style>
