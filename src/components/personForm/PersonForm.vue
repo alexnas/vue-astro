@@ -6,11 +6,32 @@ import { useModalStore } from '@/stores/modal'
 import BaseModal from '@/components/BaseModal.vue'
 import PersonData from './PersonData.vue'
 import ZodiacData from './ZodiacData.vue'
+import { Form } from 'vee-validate'
+import * as yup from 'yup'
 
 const personStore = usePersonStore()
 const { currentPerson, currentPersonZodiac } = storeToRefs(personStore)
 const modalStore = useModalStore()
 const { isNewItem, isViewItem } = storeToRefs(modalStore)
+
+const schema = yup.object({
+  name: yup.string().required().trim().min(3).max(10),
+  surname: yup.string().required().trim().min(3).max(20),
+  birthday: yup.string().required().trim().min(3).max(20),
+  timezone: yup.string().required().trim().min(1).max(20),
+  birthplace: yup.string().required().trim().min(3).max(20),
+  description: yup.string().trim().max(100),
+  sun: yup.string().required(),
+  moon: yup.string().required(),
+  mercury: yup.string().required(),
+  venus: yup.string().required(),
+  mars: yup.string().required(),
+  jupiter: yup.string().required(),
+  saturn: yup.string().required(),
+  uranus: yup.string().required(),
+  neptune: yup.string().required(),
+  pluto: yup.string().required()
+})
 
 const modalTitle = computed(() => {
   return isViewItem.value || !isNewItem.value
@@ -48,7 +69,7 @@ const handleSubmit = async () => {
 
 <template>
   <base-modal @closeModal="closeModal" :modalTitle="modalTitle">
-    <form class="form">
+    <Form class="form" :validation-schema="schema" v-slot="{ errors, meta }">
       <PersonData class="mb-6" />
       <ZodiacData />
 
@@ -64,6 +85,7 @@ const handleSubmit = async () => {
         <button
           v-if="!isViewItem"
           type="submit"
+          :disabled="!meta.valid"
           class="form-button button-submit"
           @click.prevent="handleSubmit"
         >
@@ -79,7 +101,7 @@ const handleSubmit = async () => {
           </button>
         </div>
       </div>
-    </form>
+    </Form>
   </base-modal>
 </template>
 
