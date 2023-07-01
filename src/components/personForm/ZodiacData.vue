@@ -36,7 +36,7 @@ const { isViewItem } = storeToRefs(modalStore)
           </option>
         </Field>
       </div>
-      <ErrorMessage name="sun" />
+      <ErrorMessage name="sun" class="form-field-error" />
     </div>
 
     <div>
@@ -58,7 +58,7 @@ const { isViewItem } = storeToRefs(modalStore)
           </option>
         </Field>
       </div>
-      <ErrorMessage name="moon" />
+      <ErrorMessage name="moon" class="form-field-error" />
     </div>
 
     <div>
@@ -80,7 +80,7 @@ const { isViewItem } = storeToRefs(modalStore)
           </option>
         </Field>
       </div>
-      <ErrorMessage name="mercury" />
+      <ErrorMessage name="mercury" class="form-field-error" />
     </div>
 
     <div>
@@ -102,7 +102,7 @@ const { isViewItem } = storeToRefs(modalStore)
           </option>
         </Field>
       </div>
-      <ErrorMessage name="venus" />
+      <ErrorMessage name="venus" class="form-field-error" />
     </div>
 
     <div>
@@ -124,7 +124,7 @@ const { isViewItem } = storeToRefs(modalStore)
           </option>
         </Field>
       </div>
-      <ErrorMessage name="mars" />
+      <ErrorMessage name="mars" class="form-field-error" />
     </div>
 
     <div>
@@ -146,7 +146,7 @@ const { isViewItem } = storeToRefs(modalStore)
           </option>
         </Field>
       </div>
-      <ErrorMessage name="jupiter" />
+      <ErrorMessage name="jupiter" class="form-field-error" />
     </div>
 
     <div>
@@ -168,7 +168,7 @@ const { isViewItem } = storeToRefs(modalStore)
           </option>
         </Field>
       </div>
-      <ErrorMessage name="saturn" />
+      <ErrorMessage name="saturn" class="form-field-error" />
     </div>
 
     <div>
@@ -190,7 +190,7 @@ const { isViewItem } = storeToRefs(modalStore)
           </option>
         </Field>
       </div>
-      <ErrorMessage name="uranus" />
+      <ErrorMessage name="uranus" class="form-field-error" />
     </div>
 
     <div>
@@ -212,7 +212,7 @@ const { isViewItem } = storeToRefs(modalStore)
           </option>
         </Field>
       </div>
-      <ErrorMessage name="neptune" />
+      <ErrorMessage name="neptune" class="form-field-error" />
     </div>
 
     <div>
@@ -235,7 +235,7 @@ const { isViewItem } = storeToRefs(modalStore)
         </Field>
       </div>
     </div>
-    <ErrorMessage name="pluto" />
+    <ErrorMessage name="pluto" class="form-field-error" />
   </div>
 </template>
 
@@ -251,5 +251,8 @@ const { isViewItem } = storeToRefs(modalStore)
 }
 .zodiac-select {
   @apply bg-gray-50 rounded-none rounded-r-md border text-gray-700 focus:outline-none focus:ring-gray-500 focus:border-gray-400 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2;
+}
+.form-field-error {
+  @apply text-orange-600 text-sm;
 }
 </style>

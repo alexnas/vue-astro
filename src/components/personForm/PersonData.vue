@@ -27,7 +27,7 @@ const { isNewItem, isViewItem } = storeToRefs(modalStore)
           class="person-input"
           placeholder="Person name"
         />
-        <ErrorMessage name="name" />
+        <ErrorMessage name="name" class="form-field-error" />
       </div>
 
       <div>
@@ -40,7 +40,7 @@ const { isNewItem, isViewItem } = storeToRefs(modalStore)
           class="person-input"
           placeholder="Person surname"
         />
-        <ErrorMessage name="surname" />
+        <ErrorMessage name="surname" class="form-field-error" />
       </div>
 
       <div>
@@ -53,7 +53,7 @@ const { isNewItem, isViewItem } = storeToRefs(modalStore)
           class="person-input"
           placeholder="Person birthday"
         />
-        <ErrorMessage name="birthday" />
+        <ErrorMessage name="birthday" class="form-field-error" />
       </div>
 
       <div>
@@ -66,7 +66,7 @@ const { isNewItem, isViewItem } = storeToRefs(modalStore)
           class="person-input"
           placeholder="Person timezone"
         />
-        <ErrorMessage name="timezone" />
+        <ErrorMessage name="timezone" class="form-field-error" />
       </div>
 
       <div>
@@ -79,7 +79,7 @@ const { isNewItem, isViewItem } = storeToRefs(modalStore)
           class="person-input"
           placeholder="Person surname"
         />
-        <ErrorMessage name="birthplace" />
+        <ErrorMessage name="birthplace" class="form-field-error" />
       </div>
 
       <div>
@@ -92,7 +92,7 @@ const { isNewItem, isViewItem } = storeToRefs(modalStore)
           class="person-input"
           placeholder="Person surname"
         />
-        <ErrorMessage name="description" />
+        <ErrorMessage name="description" class="form-field-error" />
       </div>
 
       <div v-if="!isNewItem">
@@ -126,5 +126,8 @@ const { isNewItem, isViewItem } = storeToRefs(modalStore)
 }
 .person-input {
   @apply mt-1 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border;
+}
+.form-field-error {
+  @apply text-orange-600 text-sm;
 }
 </style>
