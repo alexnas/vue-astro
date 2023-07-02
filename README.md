@@ -1,6 +1,10 @@
-# View Astro Data
+# Esoteric Astro Charts
 
-Vue 3 application to process astro data by specific manner and show results at the screen.
+Vue 3 application to process astro data by specific manner and display results on the screen.
+
+The Vue 3 app processes natal card data ina special manner. As a result the app create specific tree-like grafical astro charts to show specific influence and interrelation of planetary energies.
+
+Astro data are collected in PosgreSql DB. Apply CRUD operations to process data. Use Pinia as a state manager. Create tree-like structure to display results.
 
 ## Used technologies
 
@@ -11,6 +15,11 @@ Vue 3 application to process astro data by specific manner and show results at t
 - Pinia
 - Vue Router 4
 - TailwindCss
+- VeeValidate
+- Yup
+- Axios
+- REST API
+- PostrgreSql (in backend)
 
 ## Customize configuration
 
